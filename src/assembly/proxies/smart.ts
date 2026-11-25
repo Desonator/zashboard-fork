@@ -108,8 +108,7 @@ const recordSmartWeightHistory = (weights: Record<string, NodeRank[]>) => {
 export const getSmartWeightHistory = (groupName: string, nodeName: string) =>
   smartWeightHistory.value
     .filter((entry) => entry.groupName === groupName && entry.nodeName === nodeName)
-    .slice(-12)
-    .reverse()
+    .slice(-10)
 
 const restructWeights = (proxyName: string, weights: NodeRank[]) => {
   const smartWeights: Record<string, NodeRank> = {}

@@ -76,38 +76,54 @@ const handlerHistoryTip = (e: Event) => {
   }
 
   const historyList = document.createElement('div')
+  const pingColumn = document.createElement('div')
+  const statusColumn = document.createElement('div')
+  const hasStatus = statusHistoryIndex >= 0 && typeof pingConfigHistory?.alive === 'boolean'
 
-  historyList.classList.add('flex', 'flex-col', 'gap-1')
+  historyList.classList.add('grid', 'w-max', 'grid-cols-[max-content_max-content]', 'gap-x-2')
+  pingColumn.classList.add('flex', 'flex-col', 'gap-1')
+  statusColumn.classList.add(
+    'flex',
+    'flex-col',
+    'gap-1',
+    'border-l',
+    'border-base-content/20',
+    'pl-2',
+  )
 
   visibleHistory.forEach((item, index) => {
-    const itemDiv = document.createElement('div')
+    const pingRow = document.createElement('div')
     const time = document.createElement('div')
     const latency = document.createElement('div')
 
     time.textContent = dayjs(item.time).format('YYYY-MM-DD HH:mm:ss')
+    time.classList.add('text-base-content/60')
     latency.textContent = item.delay + 'ms'
     latency.className = getColorForLatency(item.delay)
 
-    itemDiv.classList.add('flex', 'items-center', 'gap-2')
-    itemDiv.append(time, latency)
+    pingRow.classList.add('flex', 'h-5', 'items-center', 'gap-2', 'whitespace-nowrap')
+    pingRow.append(time, latency)
+    pingColumn.append(pingRow)
 
-    if (index === statusHistoryIndex && typeof pingConfigHistory?.alive === 'boolean') {
-      const dataTransferStatus = document.createElement('span')
-      dataTransferStatus.classList.add(
-        'border-l',
-        'border-base-content/20',
-        'pl-2',
-        'text-xs',
-        'text-base-content/60',
-      )
-      dataTransferStatus.textContent = t(
-        pingConfigHistory.alive ? 'dataTransferOk' : 'dataTransferFailed',
-      )
-      itemDiv.append(dataTransferStatus)
+    if (hasStatus) {
+      const statusRow = document.createElement('div')
+      statusRow.classList.add('flex', 'h-5', 'items-center', 'whitespace-nowrap')
+
+      if (index === statusHistoryIndex && typeof pingConfigHistory?.alive === 'boolean') {
+        const dataTransferStatus = document.createElement('span')
+        dataTransferStatus.classList.add('text-xs', 'text-base-content/60')
+        dataTransferStatus.textContent = t(
+          pingConfigHistory.alive ? 'dataTransferOk' : 'dataTransferFailed',
+        )
+        statusRow.append(dataTransferStatus)
+      }
+
+      statusColumn.append(statusRow)
     }
-
-    historyList.append(itemDiv)
   })
+
+  historyList.append(pingColumn)
+  if (hasStatus) historyList.append(statusColumn)
 
   showTip(e, historyList, {
     delay: [1000, 0],
