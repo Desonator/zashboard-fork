@@ -23,7 +23,6 @@
         v-if="smartWeight"
         class="shrink-0 rounded px-1 text-[10px] leading-4"
         :class="smartWeightAccent"
-        :title="`${t(smartWeight.Rank)} · ${smartWeight.Weight}`"
         @mouseenter="showWeightHistory"
         >{{ formatSmartWeight(smartWeight.Weight) }}</span
       >
@@ -128,8 +127,6 @@ const formatSmartWeight = (weight: number) =>
 const showWeightHistory = (event: MouseEvent) => {
   const history = getSmartWeightHistory(props.groupName ?? '', props.name)
 
-  if (history.length < 2) return
-
   const content = document.createElement('div')
   content.classList.add('flex', 'flex-col', 'gap-1')
 
@@ -137,6 +134,13 @@ const showWeightHistory = (event: MouseEvent) => {
   title.classList.add('mb-1', 'font-medium', 'text-base-content/75')
   title.textContent = t('smartWeightHistory')
   content.append(title)
+
+  if (!history.length) {
+    const empty = document.createElement('div')
+    empty.classList.add('text-base-content/60')
+    empty.textContent = t('smartWeightHistoryEmpty')
+    content.append(empty)
+  }
 
   for (const entry of history) {
     const row = document.createElement('div')
