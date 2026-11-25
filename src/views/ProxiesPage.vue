@@ -78,6 +78,27 @@ const { padding } = usePaddingForViews({
 })
 const renderPageItems = renderProxiesPageItems
 const proxiesRef = ref<HTMLElement | null>(null)
+const PROXY_REFRESH_INTERVAL = 10_000
+let proxyRefreshTimer: ReturnType<typeof setInterval> | undefined
+let proxyRefreshInProgress = false
+
+const refreshProxyData = async () => {
+  if (document.visibilityState !== 'visible' || proxyRefreshInProgress) return
+
+  proxyRefreshInProgress = true
+
+  try {
+    await fetchProxies(false)
+  } catch {
+    // Keep the current proxy data when a background refresh fails.
+  } finally {
+    proxyRefreshInProgress = false
+  }
+}
+
+const handleVisibilityChange = () => {
+  if (document.visibilityState === 'visible') refreshProxyData()
+}
 
 type ScrollAnchor = {
   item: string
@@ -247,9 +268,14 @@ onMounted(() => {
   setTimeout(() => {
     fetchProxies()
   })
+  proxyRefreshTimer = setInterval(refreshProxyData, PROXY_REFRESH_INTERVAL)
+  document.addEventListener('visibilitychange', handleVisibilityChange)
 })
 
 onBeforeUnmount(() => {
+  if (proxyRefreshTimer) clearInterval(proxyRefreshTimer)
+  proxyRefreshTimer = undefined
+  document.removeEventListener('visibilitychange', handleVisibilityChange)
   cancelAnimationFrame(saveFrame)
   saveFrame = 0
   saveScrollPosition()

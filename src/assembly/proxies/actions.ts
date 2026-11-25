@@ -17,7 +17,7 @@ const getIPv6FromExtra = (proxy: Proxy) => {
 
 let fetchTime = 0
 
-export const fetchProxies = async () => {
+export const fetchProxies = async (refreshSmartWeights = true) => {
   const nowTime = Date.now()
 
   fetchTime = nowTime
@@ -80,7 +80,7 @@ export const fetchProxies = async () => {
     }
   })
 
-  if (includesSmartGroup) {
+  if (includesSmartGroup && refreshSmartWeights) {
     initSmartWeights()
   }
 }
