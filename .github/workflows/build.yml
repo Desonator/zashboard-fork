@@ -56,3 +56,4 @@ jobs:
         uses: softprops/action-gh-release@v3
         with:
           files: release-assets/dist.zip
+          generate_release_notes: true
