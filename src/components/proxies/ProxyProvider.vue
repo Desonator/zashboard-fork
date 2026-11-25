@@ -6,7 +6,7 @@
           <span class="text-base-content">{{ proxyProvider.name }}</span>
           <span
             class="text-base-content/40 min-w-0 flex-1 truncate text-[11px] tracking-wider uppercase tabular-nums"
-            :title="providerHealthTitle || undefined"
+            @mouseenter="showProviderHealthTip"
           >
             {{ proxyProvider.vehicleType }} · {{ proxiesCount }}
           </span>
@@ -56,7 +56,7 @@
         </div>
         <div
           class="text-base-content/60 text-xs"
-          :title="updatedAtTitle || undefined"
+          @mouseenter="showUpdatedAtTip"
         >
           {{ $t('updated') }} {{ fromNow(proxyProvider.updatedAt) }}
         </div>
@@ -73,6 +73,7 @@
 
 <script setup lang="ts">
 import { can } from '@/assembly/backend'
+import { useTooltip } from '@/composables/use-tooltip'
 import { proxyProviderHealthCheck, updateProxyProvider } from '@/assembly/proxies'
 import { useBounceOnVisible } from '@/composables/use-bounce-on-visible'
 import { useRenderProxyList } from '@/composables/use-render-proxy-list'
@@ -100,6 +101,7 @@ const proxyProvider = computed(() =>
 const allProxies = computed(() => proxyProvider.value.proxies.map((node) => node.name) ?? [])
 const { renderProxies, proxiesCount } = useRenderProxyList(allProxies)
 const { t } = useI18n()
+const { showTip } = useTooltip()
 
 const providerHealthTitle = computed(() => {
   const knownHealth = proxyProvider.value.proxies.filter(
@@ -121,6 +123,16 @@ const updatedAtTitle = computed(() => {
     ? t('providerUpdatedAt', { time: dayjs(timestamp).format('YYYY-MM-DD HH:mm:ss') })
     : ''
 })
+
+const showProviderHealthTip = (event: MouseEvent) => {
+  if (!providerHealthTitle.value) return
+  showTip(event, providerHealthTitle.value, { delay: [500, 0], touch: false })
+}
+
+const showUpdatedAtTip = (event: MouseEvent) => {
+  if (!updatedAtTitle.value) return
+  showTip(event, updatedAtTitle.value, { delay: [500, 0], touch: false })
+}
 
 const subscriptionInfo = computed(() => {
   const info = proxyProvider.value.subscriptionInfo

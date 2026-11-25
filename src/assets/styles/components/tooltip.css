@@ -1,5 +1,6 @@
 .tippy-box {
   @apply bg-neutral text-neutral-content z-[9999] whitespace-pre-line shadow-md;
+  font-family: inherit;
 }
 .tippy-box[data-placement^='top'] > .tippy-arrow:before {
   @apply border-t-neutral;

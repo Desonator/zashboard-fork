@@ -16,7 +16,7 @@
         v-for="node in smartNodes"
         :key="`${node.groupName}:${node.name}`"
         class="border-base-content/15 flex max-w-full min-w-0 items-center gap-1.5 border-l px-2 py-1 text-xs"
-        :title="`${node.groupName} · ${node.name} · ${t(node.rank)} · ${node.latency > 0 ? `${node.latency} ms` : t('noData')}`"
+        @mouseenter="showNodeDetails($event, node)"
       >
         <span class="text-base-content/80 shrink-0">{{ shortenName(node.name) }}</span>
         <span
@@ -38,12 +38,22 @@
 
 <script setup lang="ts">
 import { getLatencyByName, proxyMap, smartWeightsMap } from '@/assembly/proxies'
+import { useTooltip } from '@/composables/use-tooltip'
 import { getColorForLatency } from '@/helper'
 import type { NodeRank } from '@/types'
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 const { t } = useI18n()
+const { showTip } = useTooltip()
+
+type SmartStatusNode = {
+  groupName: string
+  name: string
+  rank: string
+  weight: number
+  latency: number
+}
 
 const smartNodes = computed(() =>
   Object.entries(smartWeightsMap.value)
@@ -68,6 +78,28 @@ const shortenName = (name: string) => {
 
 const formatWeight = (weight: number) =>
   Number.isInteger(weight) ? weight.toString() : weight.toFixed(1)
+
+const showNodeDetails = (event: MouseEvent, node: SmartStatusNode) => {
+  const content = document.createElement('div')
+  content.classList.add('flex', 'flex-col', 'gap-1')
+
+  for (const line of [
+    node.groupName,
+    node.name,
+    `${t(node.rank)} · ${formatWeight(node.weight)}`,
+    node.latency > 0 ? `${node.latency} ms` : t('noData'),
+  ]) {
+    const row = document.createElement('div')
+    row.textContent = line
+    content.append(row)
+  }
+
+  showTip(event, content, {
+    delay: [500, 0],
+    trigger: 'mouseenter',
+    touch: false,
+  })
+}
 
 const weightAccent = (rank: string) => {
   switch (rank) {
