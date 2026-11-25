@@ -39,14 +39,18 @@ const readHistory = (proxyName: string, testUrl: string) => {
       return undefined
     }
 
-    if (proxyNode.extra) {
-      const testUrlHistory = proxyNode.extra[testUrl]?.history
+    const testUrlHistory = proxyNode.extra?.[testUrl]?.history
 
-      if (testUrlHistory?.length) return testUrlHistory
-      if (proxyNode.all?.length && proxyNode.history?.length) return proxyNode.history
+    if (testUrlHistory?.length) return testUrlHistory
+    if (proxyNode.all?.length && proxyNode.history?.length) return proxyNode.history
 
-      return testUrlHistory
-    }
+    const nowNode = proxyMap.value[getNowProxyNodeName(proxyName)]
+    const nowTestUrlHistory = nowNode?.extra?.[testUrl]?.history
+
+    if (nowTestUrlHistory?.length) return nowTestUrlHistory
+    if (nowNode?.history?.length) return nowNode.history
+
+    return testUrlHistory
   }
 
   return proxyMap.value[getNowProxyNodeName(proxyName)]?.history
@@ -104,13 +108,16 @@ export const getHistoryByName = (proxyName: string, groupName?: string) => {
     if (testUrlHistory?.length) return testUrlHistory
     if (proxyNode.all?.length && proxyNode.history?.length) return proxyNode.history
 
-    if (!proxyNode?.extra) {
-      const nowNode = proxyMap.value[getNowProxyNodeName(proxyName)]
+    const nowNode = proxyMap.value[getNowProxyNodeName(proxyName)]
+    const nowTestUrlHistory = nowNode?.extra?.[url]?.history
 
-      return nowNode?.history
-    }
+    if (nowTestUrlHistory?.length) return nowTestUrlHistory
+    if (nowNode?.history?.length) return nowNode.history
+
+    if (proxyNode.all?.length) return []
 
     if (!proxyNode.extra?.[url]) {
+      proxyNode.extra ||= {}
       proxyNode.extra[url] = {
         history: [],
         alive: true,
