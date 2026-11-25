@@ -1,124 +1,84 @@
-# zashboard
+# Форк Zashboard
+
+Этот репозиторий содержит персональный форк [Zashboard](https://github.com/Zephyruso/zashboard) — веб-панели для Clash-совместимых ядер. В форке добавлены индикаторы весов узлов в Smart-группах и проверка обновлений в репозитории форка.
 
 <p align="center">
-  <img src="./readme/pc.png" height="300">
-  <img src="./readme/mobile.png" height="300">
+  <img src="./readme/pc.png" height="300" alt="Настольная версия Zashboard">
+  <img src="./readme/mobile.png" height="300" alt="Мобильная версия Zashboard">
 </p>
 
-## **Requirement**
+## Требования к браузеру
 
-Browser support
+- Chrome 111 или новее
+- Firefox 128 или новее
+- Safari 16.4 или новее
+- Взломанная версия iOS 16.4 не поддерживается
 
-- Chrome 111 (released March 2023)
-- Firefox 128 (released July 2024)
-- Safari 16.4 (released March 2023)
-- Not supported on iOS 16.4 jailbroken version.
+## Загрузка и установка
 
-## **Online**
+Скачайте `dist.zip` со [страницы релизов форка](https://github.com/Desonator/zashboard-fork/releases). Распакуйте архив и разместите содержимое каталога `dist` как внешнюю UI-панель Clash-совместимого ядра. Архив собирается GitHub Actions; архивы с исходным кодом не предназначены для установки в качестве панели.
 
-You can access the online zashboard at the following link:
-
-- [Online zashboard](http://board.zash.run.place)
-
-## **Download**
-
-You can download the zashboard files here:
-
-> [!WARNING]
-> Support for sing-box has been removed. [Learn more about this
-> decision](./docs/sing-box-deprecation.md).
-
-release:
-
-- [dist.zip (7.81 MB)](https://github.com/Zephyruso/zashboard/releases/latest/download/dist.zip) – Includes better font-loading experience.
-- [dist-no-fonts.zip (1.44 MB)](https://github.com/Zephyruso/zashboard/releases/latest/download/dist-no-fonts.zip) – No fonts included, uses system fonts only.
-- [dist-cdn-fonts.zip (1.44 MB)](https://github.com/Zephyruso/zashboard/releases/latest/download/dist-cdn-fonts.zip) – Fonts loaded from unpkg.com, If you have trouble connecting to unpkg.com, **you may experience slow page loading**.
-- [dist-firasans-only.zip (1.67 MB)](https://github.com/Zephyruso/zashboard/releases/latest/download/dist-firasans-only.zip) – Only with FiraSans Font
-- [dist-misans-only.zip (3.54 MB)](https://github.com/Zephyruso/zashboard/releases/latest/download/dist-misans-only.zip) – Only with MiSans Font
-- [dist-pingfang-only.zip (3.25 MB)](https://github.com/Zephyruso/zashboard/releases/latest/download/dist-pingfang-only.zip) – Only with PingFang Font
-- [dist-sarasa-only.zip (3.67 MB)](https://github.com/Zephyruso/zashboard/releases/latest/download/dist-sarasa-only.zip) – Only with Sarasa Font
-
-dev:
-
-- [gh-pages.zip (7.81 MB)](https://github.com/Zephyruso/zashboard/archive/refs/heads/gh-pages.zip)
-- [gh-pages-no-fonts.zip (1.44 MB)](https://github.com/Zephyruso/zashboard/archive/refs/heads/gh-pages-no-fonts.zip)
-- [gh-pages-cdn-fonts.zip (1.44 MB)](https://github.com/Zephyruso/zashboard/archive/refs/heads/gh-pages-cdn-fonts.zip)
-- [gh-pages-firasans-only.zip (1.67 MB)](https://github.com/Zephyruso/zashboard/archive/refs/heads/gh-pages-firasans-only.zip)
-- [gh-pages-misans-only.zip (3.54 MB)](https://github.com/Zephyruso/zashboard/archive/refs/heads/gh-pages-misans-only.zip)
-- [gh-pages-pingfang-only.zip (3.25 MB)](https://github.com/Zephyruso/zashboard/archive/refs/heads/gh-pages-pingfang-only.zip)
-- [gh-pages-sarasa-only.zip (3.67 MB)](https://github.com/Zephyruso/zashboard/archive/refs/heads/gh-pages-sarasa-only.zip)
-
-## **Docker Setup**
-
-To run zashboard via Docker, use the following command:
-
-```
-docker run -d -p 80:80 ghcr.io/zephyruso/zashboard:latest
-```
-
-## Tips
-
-1. The connection table can be dragged with the left mouse button, and right-clicking can copy cell content.
-2. Right-clicking on a node / node group card will perform a speedtest for the node / node group.
-3. The proxy group sorting is based on the node order in the GLOBAL group, which follows the configuration file order. If you need custom ordering, you can specify the order by overriding the GLOBAL group.
-4. The dashboard supports PWA (Progressive Web App), which can provide a native app-like experience on mobile devices through "Add to Home Screen".
-5. The dashboard's upgrade button and auto-upgrade functionality require proper configuration of the core's UI download path ([mihomo](https://wiki.metacubex.one/config/general/#_9)), otherwise clicking update may result in updating to the core's default panel.
-
-## 提示
-
-1. 连接表格可被鼠标左键拖动，右键可复制单元格内容。
-2. 右键点击节点/节点组卡片可对节点/节点组进行测速。
-3. 面板的节点组排序是根据GLOBAL组中的节点顺序排序的，即按配置文件的顺序，如果你需要自定义顺序，可通过覆盖GLOBAL组指定顺序
-4. 面板支持PWA（Progressive Web App），可以在移动设备上通过"添加到主屏幕"获得类原生app的体验
-5. 面板的更新按钮和自动更新功能需要正确的配置核心的ui下载路径 ([mihomo](https://wiki.metacubex.one/config/general/#_9)), 否则可能会在点击更新后更新为核心默认面板
-
-## URL params format
-
-#### basic example
-
-http://host:port/#/setup?hostname=ipordomain&port=9090&secret=123456
-
-1. **`protocol`**
-   - Determines the protocol, `http` or `https`.
-   - Default: current page protocol
-   - The legacy `http` / `https` flag params (e.g. `?http=1`) are still supported for backward compatibility, but `protocol` takes precedence when both are present.
-
-2. **`hostname`**
-   - The Clash API's IP or domain.
-
-3. **`port`**
-   - The Clash API port.
-
-4. **`secondaryPath`**
-   - Optional path appended to the base URL.
-   - Default: An empty string.
-
-5. **`secret`**
-   - Password for authentication.
-
-6. **`disableUpgradeCore`**
-   - Set '1' to hide upgrade core button
-
-7. **`disableTunMode`**
-   - Set '1' to hide tun switch
-
-#### Automatic backend connection
-
-When no backends have been saved and `hostname` is not specified in the URL query, zashboard tries to connect to the Clash API at the page's origin (the same protocol, hostname, and port). This applies to pages served over HTTP or HTTPS. The `protocol` and `port` URL parameters do not change this address. URL parameters such as `secret`, `label`, `type`, `disableUpgradeCore`, and `disableTunMode` also apply to the detected backend.
-
-For example, with this mihomo configuration on remote server `192.168.1.1`:
+Чтобы ядро загружало этот форк при обновлении UI, укажите в его конфигурации ссылку на архив релиза этого репозитория. Например:
 
 ```yaml
 external-ui: ui
-external-ui-url: https://github.com/Zephyruso/zashboard/archive/refs/heads/gh-pages.zip
+external-ui-url: https://github.com/Desonator/zashboard-fork/releases/latest/download/dist.zip
+```
+
+Панель проверяет наличие новых релизов именно в этом форке. При обновлении через API ядро скачивает архив по адресу из `external-ui-url`; адрес проверки обновлений панели на эту настройку ядра не влияет. Для отображения статистики Smart-групп используйте ядро, которое поддерживает соответствующие Smart API и возвращает данные о весах.
+
+## Сборка из исходного кода
+
+Требуются Node.js 22 и pnpm.
+
+```sh
+pnpm install --frozen-lockfile
+pnpm run build
+```
+
+Готовые файлы появятся в `dist/`. При отправке изменений в ветку `main` GitHub Actions собирает артефакт. Отправка тега `v*` запускает сборку GitHub Release с архивом `dist.zip`. Состояние сборок и артефакты доступны во вкладке [Actions](https://github.com/Desonator/zashboard-fork/actions).
+
+## Советы
+
+1. Таблицу подключений можно перетаскивать левой кнопкой мыши. Щёлкните правой кнопкой по ячейке, чтобы скопировать её содержимое.
+2. Щёлкните правой кнопкой по карточке прокси или группы прокси, чтобы запустить тест скорости.
+3. Группы прокси сортируются по порядку узлов в группе `GLOBAL`, который определяется конфигурацией. Чтобы задать свой порядок, настройте группу `GLOBAL`.
+4. Панель поддерживает установку в формате PWA через функцию браузера «Добавить на главный экран».
+5. Данные о весах Smart-групп панель получает через API подключённого ядра. Они отображаются, только если ядро реализует Smart API форка и возвращает статистику весов.
+
+## Параметры URL
+
+Пример:
+
+```text
+http://host:port/#/setup?hostname=ipordomain&port=9090&secret=123456
+```
+
+- `protocol`: протокол `http` или `https`; по умолчанию используется протокол текущей страницы. Старые флаги `http=1` и `https=1` также поддерживаются, но приоритет у параметра `protocol`.
+- `hostname`: IP-адрес или доменное имя Clash API.
+- `port`: порт Clash API.
+- `secondaryPath`: необязательный путь, добавляемый к базовому URL; по умолчанию пустой.
+- `secret`: пароль для аутентификации в API.
+- `disableUpgradeCore=1`: скрывает кнопку обновления ядра.
+- `disableTunMode=1`: скрывает переключатель TUN.
+
+### Автоматическое подключение к ядру
+
+Если сохранённых подключений нет и параметр `hostname` не указан, панель пробует подключиться к Clash API по адресу открытой страницы. К этому подключению также применяются параметры URL `secret`, `label`, `type`, `disableUpgradeCore` и `disableTunMode`. Параметры `protocol` и `port` не меняют автоматически определённый адрес.
+
+Например, для такой конфигурации на сервере `192.168.1.1`:
+
+```yaml
+external-ui: ui
+external-ui-url: https://github.com/Desonator/zashboard-fork/releases/latest/download/dist.zip
 external-controller: 0.0.0.0:9090
 secret: ''
 ```
 
-Opening `http://192.168.1.1:9090/ui` automatically connects to `http://192.168.1.1:9090` and saves the backend if the API probe succeeds. If mihomo requires authentication, pass its secret using `http://192.168.1.1:9090/ui?secret=your-secret`.
+При открытии `http://192.168.1.1:9090/ui` панель попробует подключиться к `http://192.168.1.1:9090` и сохранит подключение, если API ответит. Если для API требуется пароль, передайте его в URL, например `http://192.168.1.1:9090/ui?secret=ваш-пароль`.
 
-`http://127.0.0.1:9090` with an empty secret is probed at the same time as a fallback, and the same-origin backend takes priority. If a candidate rejects the secret, the form keeps that address so you only need to enter the secret. If no candidate responds, the form shows `http://127.0.0.1:9090` for manual configuration. Editing or submitting the form during detection cancels automatic connection.
+В качестве запасного варианта панель также проверяет `http://127.0.0.1:9090` с пустым паролем. Адрес текущей страницы имеет приоритет. Если ядро отклонит пароль, найденный адрес останется в форме — введите пароль вручную. Если ни один адрес не отвечает, форма предложит `http://127.0.0.1:9090` для ручной настройки. Редактирование или отправка формы отменяет автоматическое обнаружение. Сохранённые подключения и явно заданные в URL параметры продолжают работать как раньше.
 
-Saved backends and explicit URL backend parameters retain their existing behavior. Automatic same-origin detection does not override them.
+### Поддержка исходного проекта
 
-### I code just for fun, not for money. If you really want to donate, please consider donating to [UNICEF](https://www.unicef.org/) to help hungry children.
+Форк основан на [Zephyruso/Zashboard](https://github.com/Zephyruso/zashboard). Если хотите сделать пожертвование, рассмотрите возможность поддержать [UNICEF](https://www.unicef.org/).
