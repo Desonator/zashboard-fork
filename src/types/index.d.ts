@@ -61,7 +61,17 @@ export type Proxy = {
   icon: string
   hidden?: boolean
   selectable?: boolean
+  alive?: boolean
   testUrl?: string
+  expectedStatus?: string | number
+  pingConfig?: {
+    connectivity?: string
+    destination?: string
+    httpMethod?: 'GET' | 'HEAD'
+    interval?: number
+    sampling?: number
+    timeout?: number
+  }
   'dialer-proxy'?: string
   'provider-name'?: string
 }

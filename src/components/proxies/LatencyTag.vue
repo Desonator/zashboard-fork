@@ -30,22 +30,33 @@
 import { NOT_CONNECTED } from '@/constant'
 import { getColorForLatency } from '@/helper'
 import { useTooltip } from '@/composables/use-tooltip'
-import { getHistoryByName, getLatencyByName } from '@/assembly/proxies'
+import { getHistoryByName, getLatencyByName, getTestUrl, proxyMap } from '@/assembly/proxies'
 import { BoltIcon } from '@heroicons/vue/24/outline'
 import { CountUp } from 'countup.js'
 import dayjs from 'dayjs'
 import { computed, onUnmounted, ref, watch } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 const { showTip } = useTooltip()
+const { t } = useI18n()
 const handlerHistoryTip = (e: Event) => {
-  const history = getHistoryByName(props.name ?? '', props.groupName)
+  const proxy = proxyMap.value[props.name ?? '']
+  const group = props.groupName ? proxyMap.value[props.groupName] : undefined
+  const testUrl = group?.testUrl || (props.groupName ? getTestUrl(props.groupName) : '')
+  const pingConfig = group?.pingConfig
+  const pingConfigHistory = testUrl ? proxy?.extra?.[testUrl] : undefined
+  const history = getHistoryByName(props.name ?? '', props.groupName) ?? []
+  const hasGroupDiagnostics = Boolean(
+    group?.testUrl || group?.expectedStatus !== undefined || pingConfig,
+  )
 
-  if (!history.length) return
+  if (!history.length && !hasGroupDiagnostics) return
 
   const historyList = document.createElement('div')
 
   historyList.classList.add('flex', 'flex-col', 'gap-1')
-  for (const item of history) {
+
+  for (const item of history.slice(-12)) {
     const itemDiv = document.createElement('div')
     const time = document.createElement('div')
     const latency = document.createElement('div')
@@ -57,6 +68,51 @@ const handlerHistoryTip = (e: Event) => {
     itemDiv.classList.add('flex', 'items-center', 'gap-2')
     itemDiv.append(time, latency)
     historyList.append(itemDiv)
+  }
+
+  if (hasGroupDiagnostics) {
+    const separator = document.createElement('div')
+    separator.classList.add('my-1', 'border-t', 'border-base-content/15')
+    historyList.append(separator)
+
+    const addInfoRow = (label: string, value: string, valueClass = '') => {
+      const row = document.createElement('div')
+      const labelElement = document.createElement('span')
+      const valueElement = document.createElement('span')
+
+      row.classList.add('flex', 'max-w-80', 'items-start', 'justify-between', 'gap-3')
+      labelElement.classList.add('shrink-0', 'text-base-content/60')
+      valueElement.classList.add('max-w-64', 'break-all', 'text-right')
+      if (valueClass) valueElement.classList.add(valueClass)
+      labelElement.textContent = label
+      valueElement.textContent = value
+      row.append(labelElement, valueElement)
+      historyList.append(row)
+    }
+
+    if (group?.testUrl) addInfoRow(t('speedtestUrl'), group.testUrl)
+    if (group?.expectedStatus !== undefined) {
+      addInfoRow(t('expectedHttpStatus'), String(group.expectedStatus))
+    }
+
+    if (pingConfig) {
+      if (pingConfig.destination) {
+        addInfoRow(t('pingConfigDestination'), pingConfig.destination)
+      }
+      if (pingConfig.httpMethod) addInfoRow(t('httpMethod'), pingConfig.httpMethod)
+      if (pingConfig.timeout !== undefined) {
+        addInfoRow(t('pingConfigTimeout'), `${pingConfig.timeout} ms`)
+      }
+      if (pingConfig.connectivity) addInfoRow(t('connectivityCheck'), pingConfig.connectivity)
+
+      if (typeof pingConfigHistory?.alive === 'boolean') {
+        addInfoRow(
+          t('destinationCheck'),
+          t(pingConfigHistory.alive ? 'checkPassed' : 'checkFailed'),
+          pingConfigHistory.alive ? 'text-success' : 'text-error',
+        )
+      }
+    }
   }
 
   showTip(e, historyList, {

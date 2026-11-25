@@ -24,6 +24,7 @@
         class="shrink-0 rounded px-1 text-[10px] leading-4"
         :class="smartWeightAccent"
         :title="`${t(smartWeight.Rank)} · ${smartWeight.Weight}`"
+        @mouseenter="showWeightHistory"
         >{{ formatSmartWeight(smartWeight.Weight) }}</span
       >
     </div>
@@ -50,6 +51,8 @@
 
 <script setup lang="ts">
 import { smartWeightsMap } from '@/assembly/proxies'
+import { getSmartWeightHistory } from '@/assembly/proxies/smart'
+import { useTooltip } from '@/composables/use-tooltip'
 import { PROXY_CARD_SIZE, PROXY_SORT_TYPE } from '@/constant'
 import { checkTruncation } from '@/helper/tooltip'
 import {
@@ -62,10 +65,12 @@ import { getIPv6ByName, getTestUrl, proxyMap } from '@/assembly/proxies'
 import { IPv6test, proxyCardSize, proxySortType, truncateProxyName } from '@/store/settings'
 import { computed, inject, nextTick, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
+import dayjs from 'dayjs'
 import LatencyTag from './LatencyTag.vue'
 import ProxyIcon from './ProxyIcon.vue'
 
 const { t } = useI18n()
+const { showTip } = useTooltip()
 const props = defineProps<{
   name: string
   active?: boolean
@@ -106,6 +111,38 @@ const smartWeightAccent = computed(() => {
 })
 const formatSmartWeight = (weight: number) =>
   Number.isInteger(weight) ? weight.toString() : weight.toFixed(1)
+const showWeightHistory = (event: MouseEvent) => {
+  const history = getSmartWeightHistory(props.groupName ?? '', props.name)
+
+  if (history.length < 2) return
+
+  const content = document.createElement('div')
+  content.classList.add('flex', 'flex-col', 'gap-1')
+
+  const title = document.createElement('div')
+  title.classList.add('mb-1', 'font-medium', 'text-base-content/75')
+  title.textContent = t('smartWeightHistory')
+  content.append(title)
+
+  for (const entry of history) {
+    const row = document.createElement('div')
+    const time = document.createElement('span')
+    const weight = document.createElement('span')
+
+    row.classList.add('flex', 'items-center', 'justify-between', 'gap-3')
+    time.textContent = dayjs(entry.time).format('YYYY-MM-DD HH:mm:ss')
+    weight.classList.add('tabular-nums')
+    weight.textContent = `${formatSmartWeight(entry.weight)} · ${t(entry.rank)}`
+    row.append(time, weight)
+    content.append(row)
+  }
+
+  showTip(event, content, {
+    delay: [500, 0],
+    trigger: 'mouseenter',
+    touch: false,
+  })
+}
 
 const scrollNodeIntoView = inject(scrollNodeIntoViewKey, null)
 const latencyTipAnimationClass = computed(() =>

@@ -31,6 +31,8 @@ The dashboard checks for releases in this fork. The core downloads the UI archiv
 
 When the connected core exposes Smart-group weights through its API, the dashboard can show each Smart node's weight and ping in a responsive status row, as well as a weight badge and usage rank on its proxy card. The weight badge uses a restrained color accent based on the rank. Optional settings control this row, sorting Smart groups by usage frequency, and showing the three highest-weight Smart nodes in the proxy chain. These are the top candidates by weight and do not necessarily represent the route used by an individual connection. Weight information requires a core that supports the relevant Smart API and returns the data.
 
+Hovering a Smart weight shows locally recorded weight/rank changes for that backend. The dashboard records a point only when the value changes; it does not add polling. The existing ping tooltip also shows group test details returned by the core, and displays Prizrak-Core's additional `ping-config` status only when the API provides that profile and result. Provider availability and exact update time appear as tooltip details when the core returns those fields.
+
 ## Build from source
 
 Requirements: Node.js 22 and pnpm.

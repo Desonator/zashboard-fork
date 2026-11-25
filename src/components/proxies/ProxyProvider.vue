@@ -6,6 +6,7 @@
           <span class="text-base-content">{{ proxyProvider.name }}</span>
           <span
             class="text-base-content/40 min-w-0 flex-1 truncate text-[11px] tracking-wider uppercase tabular-nums"
+            :title="providerHealthTitle || undefined"
           >
             {{ proxyProvider.vehicleType }} · {{ proxiesCount }}
           </span>
@@ -53,7 +54,10 @@
             <span>{{ subscriptionInfo.expireStr }}</span>
           </div>
         </div>
-        <div class="text-base-content/60 text-xs">
+        <div
+          class="text-base-content/60 text-xs"
+          :title="updatedAtTitle || undefined"
+        >
           {{ $t('updated') }} {{ fromNow(proxyProvider.updatedAt) }}
         </div>
       </div>
@@ -95,6 +99,28 @@ const proxyProvider = computed(() =>
 )
 const allProxies = computed(() => proxyProvider.value.proxies.map((node) => node.name) ?? [])
 const { renderProxies, proxiesCount } = useRenderProxyList(allProxies)
+const { t } = useI18n()
+
+const providerHealthTitle = computed(() => {
+  const knownHealth = proxyProvider.value.proxies.filter(
+    (proxy) => typeof proxy.alive === 'boolean',
+  )
+
+  if (!knownHealth.length) return ''
+
+  return t('providerHealthSummary', {
+    available: knownHealth.filter((proxy) => proxy.alive).length,
+    total: knownHealth.length,
+  })
+})
+
+const updatedAtTitle = computed(() => {
+  const timestamp = proxyProvider.value.updatedAt
+
+  return timestamp
+    ? t('providerUpdatedAt', { time: dayjs(timestamp).format('YYYY-MM-DD HH:mm:ss') })
+    : ''
+})
 
 const subscriptionInfo = computed(() => {
   const info = proxyProvider.value.subscriptionInfo
@@ -106,7 +132,6 @@ const subscriptionInfo = computed(() => {
       return null
     }
 
-    const { t } = useI18n()
     const total = prettyBytesHelper(Total, { binary: true })
     const used = prettyBytesHelper(Download + Upload, { binary: true })
     const percentage = toFinite((((Download + Upload) / Total) * 100).toFixed(2))
