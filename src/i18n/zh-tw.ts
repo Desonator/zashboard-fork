@@ -383,9 +383,6 @@ const zhTW: LANG_MESSAGE = {
   displaySmartTopNodes: '在鏈路中顯示 Smart 前三節點',
   smartTopNodes: 'Smart 前三:',
   smartTopTooltip: '權重最高的三個 Smart 節點；它們是候選節點，不代表連線的實際路徑。',
-  groupTestUrls: '組測試連結',
-  groupTestUrlsTip:
-    '對於從面板手動觸發的測試，此處設定測試連結 > 配置中的連結 > 面板全域測試連結，但是對於UrlTest/Fallback等具有核心內部的定時測速邏輯的組，仍然需要修改配置中的連結，此處僅推薦Selector等場景',
   groupName: '組名',
   unknown: '未知',
   sourceIPAddress: '源IP地址',

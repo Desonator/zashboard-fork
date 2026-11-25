@@ -398,9 +398,6 @@ const ru: LANG_MESSAGE = {
   smartTopNodes: 'Топ Smart:',
   smartTopTooltip:
     'Три узла Smart с наибольшим весом; это кандидаты, а не фактический маршрут соединения.',
-  groupTestUrls: 'Группа тестовых URL',
-  groupTestUrlsTip:
-    'Для ручных тестов, запущенных из панели, установите тестовые URL > URL в конфигурации > Глобальные тестовые URL, но для групп с UrlTest/Fallback и т.д., URL в конфигурации все равно нужно изменить, поэтому это рекомендуется только для Selector и т.д. ',
   groupName: 'Группа имени',
   unknown: 'Неизвестно',
   sourceIPAddress: 'Исходный IP-адрес',

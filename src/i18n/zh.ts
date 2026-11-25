@@ -383,9 +383,6 @@ const zh: LANG_MESSAGE = {
   displaySmartTopNodes: '在链路中显示 Smart 前三节点',
   smartTopNodes: 'Smart 前三:',
   smartTopTooltip: '权重最高的三个 Smart 节点；它们是候选节点，不代表连接的实际路径。',
-  groupTestUrls: '组测试链接',
-  groupTestUrlsTip:
-    '对于从面板手动触发的测试，此处设置测试链接 > 配置中的链接 > 面板全局测试链接，但是对于UrlTest/Fallback等具有核心内部的定时测速逻辑的组，仍然需要修改配置中的链接，此处仅推荐Selector等场景',
   groupName: '组名',
   unknown: '未知',
   sourceIPAddress: '源IP地址',

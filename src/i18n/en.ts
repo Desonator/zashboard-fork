@@ -395,9 +395,6 @@ const en = {
   smartTopNodes: 'Smart top:',
   smartTopTooltip:
     'The three Smart nodes with the highest weights; these are candidates, not the actual route of a connection.',
-  groupTestUrls: 'Group test URLs',
-  groupTestUrlsTip:
-    'For manual tests triggered from the dashboard, URL priority is: URLs set here > URLs in configuration > global test URLs. For groups like UrlTest/Fallback, you still need to modify URLs in the configuration, so this is mainly recommended for Selector scenarios.',
   groupName: 'Group name',
   unknown: 'Unknown',
   sourceIPAddress: 'Source IP address',

@@ -133,13 +133,13 @@
         @submit.prevent="addNode"
       >
         <TextInput
-          v-model="nodeForm.name"
+          v-model="nodeName"
           class="w-40"
           :placeholder="$t('name')"
           :clearable="true"
         />
         <TextInput
-          v-model="nodeForm.link"
+          v-model="nodeLink"
           class="min-w-0 flex-1"
           placeholder="vless://..."
           :clearable="true"
@@ -147,7 +147,7 @@
         <button
           type="submit"
           class="btn btn-sm btn-primary"
-          :disabled="busy || !nodeForm.name || !nodeForm.link"
+          :disabled="busy || !nodeName || !nodeLink"
         >
           {{ $t('daeAddNode') }}
         </button>
@@ -191,7 +191,7 @@
         >
           <span class="text-base-content/70">{{ $t('daeGroupPolicy') }}</span>
           <SelectInput
-            v-model="groupForm.policy"
+            v-model="groupPolicy"
             class="select select-sm w-32"
             :options="policyOptions"
           />
@@ -202,7 +202,7 @@
         >
           <span class="text-base-content/70">{{ $t('daeDefaultMember') }}</span>
           <SelectInput
-            v-model="groupForm.defaultMemberId"
+            v-model="groupDefaultMemberId"
             class="select select-sm w-40"
             :options="memberOptions"
           />
@@ -213,7 +213,7 @@
         >
           <span class="text-base-content/70">{{ $t('daeFinalOutbound') }}</span>
           <TextInput
-            v-model="groupForm.finalOutbound"
+            v-model="groupFinalOutbound"
             class="w-40"
             :clearable="true"
           />
@@ -224,7 +224,7 @@
         >
           <span class="text-base-content/70">{{ $t('daeTolerance') }}</span>
           <input
-            v-model="groupForm.tolerance"
+            v-model="groupTolerance"
             type="number"
             min="0"
             class="input input-sm w-24"
@@ -236,7 +236,7 @@
         >
           <span class="text-base-content/70">{{ $t('daeIdleTimeout') }}</span>
           <input
-            v-model="groupForm.idleTimeout"
+            v-model="groupIdleTimeout"
             type="number"
             min="0"
             class="input input-sm w-24"
@@ -248,7 +248,7 @@
         >
           <span class="text-base-content/70">{{ $t('daeInterruptConnections') }}</span>
           <input
-            v-model="groupForm.interruptConnections"
+            v-model="groupInterruptConnections"
             type="checkbox"
             class="toggle toggle-sm"
           />
@@ -319,15 +319,14 @@ const providerForm = reactive({
   userAgent: '',
   cache: true,
 })
-const nodeForm = reactive({ name: '', link: '' })
-const groupForm = reactive({
-  policy: 'selector',
-  defaultMemberId: '',
-  finalOutbound: '',
-  tolerance: '' as string | number,
-  idleTimeout: '' as string | number,
-  interruptConnections: false,
-})
+const nodeName = ref('')
+const nodeLink = ref('')
+const groupPolicy = ref('selector')
+const groupDefaultMemberId = ref('')
+const groupFinalOutbound = ref('')
+const groupTolerance = ref<string | number>('')
+const groupIdleTimeout = ref<string | number>('')
+const groupInterruptConnections = ref(false)
 
 const providers = computed(() => daeProviderList.value)
 const inlineNodes = computed(() =>
@@ -370,12 +369,13 @@ const applyGroup = () => {
 
   if (!group) return
 
-  groupForm.policy = group.policy.kind
-  groupForm.defaultMemberId = group.config.default_member_id ?? ''
-  groupForm.finalOutbound = group.config.final_outbound ?? ''
-  groupForm.tolerance = group.config.tolerance == null ? '' : String(group.config.tolerance)
-  groupForm.idleTimeout = group.config.idle_timeout == null ? '' : String(group.config.idle_timeout)
-  groupForm.interruptConnections = group.config.interrupt_connections ?? false
+  groupPolicy.value = group.policy.kind
+  groupDefaultMemberId.value = group.config.default_member_id ?? ''
+  groupFinalOutbound.value = group.config.final_outbound ?? ''
+  groupTolerance.value = group.config.tolerance == null ? '' : String(group.config.tolerance)
+  groupIdleTimeout.value =
+    group.config.idle_timeout == null ? '' : String(group.config.idle_timeout)
+  groupInterruptConnections.value = group.config.interrupt_connections ?? false
 }
 
 const run = async (action: () => Promise<void>, success: string) => {
@@ -441,9 +441,9 @@ const removeProvider = async (id: string, name: string) => {
 
 const addNode = () =>
   run(async () => {
-    await createDaeNode(nodeForm.name.trim(), nodeForm.link.trim())
-    nodeForm.name = ''
-    nodeForm.link = ''
+    await createDaeNode(nodeName.value.trim(), nodeLink.value.trim())
+    nodeName.value = ''
+    nodeLink.value = ''
   }, 'daeEntryCreated')
 
 const removeNode = async (id: string, name: string) => {
@@ -470,18 +470,18 @@ const buildOperations = (): DaeJsonPatchOperation[] => {
     if (mutable(field)) operations.push({ op: 'replace', path, value })
   }
 
-  if (mutable('policy') && groupForm.policy !== group.policy.kind) {
+  if (mutable('policy') && groupPolicy.value !== group.policy.kind) {
     operations.push({
       op: 'replace',
       path: '/policy',
-      value: { kind: groupForm.policy, native: groupForm.policy },
+      value: { kind: groupPolicy.value, native: groupPolicy.value },
     })
   }
 
-  const defaultMemberId = groupForm.defaultMemberId || null
-  const finalOutbound = groupForm.finalOutbound.trim() || null
-  const tolerance = numberOrNull(groupForm.tolerance)
-  const idleTimeout = numberOrNull(groupForm.idleTimeout)
+  const defaultMemberId = groupDefaultMemberId.value || null
+  const finalOutbound = groupFinalOutbound.value.trim() || null
+  const tolerance = numberOrNull(groupTolerance.value)
+  const idleTimeout = numberOrNull(groupIdleTimeout.value)
 
   if (defaultMemberId !== (group.config.default_member_id ?? null)) {
     set('default_member_id', '/config/default_member_id', defaultMemberId)
@@ -495,8 +495,8 @@ const buildOperations = (): DaeJsonPatchOperation[] => {
   if (idleTimeout !== (group.config.idle_timeout ?? null)) {
     set('idle_timeout', '/config/idle_timeout', idleTimeout)
   }
-  if (groupForm.interruptConnections !== (group.config.interrupt_connections ?? false)) {
-    set('interrupt_connections', '/config/interrupt_connections', groupForm.interruptConnections)
+  if (groupInterruptConnections.value !== (group.config.interrupt_connections ?? false)) {
+    set('interrupt_connections', '/config/interrupt_connections', groupInterruptConnections.value)
   }
 
   return operations
