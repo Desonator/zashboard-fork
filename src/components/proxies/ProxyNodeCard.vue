@@ -129,30 +129,36 @@ const showWeightHistory = (event: MouseEvent) => {
   const history = getSmartWeightHistory(props.groupName ?? '', props.name)
 
   const content = document.createElement('div')
-  content.classList.add('flex', 'flex-col', 'gap-1')
+  content.classList.add(
+    'grid',
+    'w-max',
+    'grid-cols-[max-content_max-content_max-content]',
+    'items-center',
+    'gap-x-2',
+    'gap-y-1',
+  )
 
   if (!history.length) {
     const empty = document.createElement('div')
-    empty.classList.add('text-base-content/60')
+    empty.classList.add('col-span-3', 'text-base-content/60')
     empty.textContent = t('smartWeightHistoryEmpty')
     content.append(empty)
   }
 
   for (const entry of history) {
-    const row = document.createElement('div')
     const time = document.createElement('span')
     const weight = document.createElement('span')
     const rank = document.createElement('span')
 
-    row.classList.add('flex', 'items-center', 'gap-2')
     time.textContent = dayjs(entry.time).format('YYYY-MM-DD HH:mm:ss')
+    time.classList.add('whitespace-nowrap', 'text-base-content/60')
     weight.classList.add('shrink-0', 'rounded', 'px-1', 'text-[10px]', 'leading-4', 'tabular-nums')
     weight.classList.add(...smartWeightAccentFor(entry.rank).split(' '))
     weight.textContent = formatSmartWeight(entry.weight)
+    rank.classList.add('whitespace-nowrap')
     rank.classList.add('text-base-content/60')
     rank.textContent = t(entry.rank)
-    row.append(time, weight, rank)
-    content.append(row)
+    content.append(time, weight, rank)
   }
 
   showTip(event, content, {
