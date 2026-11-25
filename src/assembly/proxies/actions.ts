@@ -6,7 +6,7 @@ import { automaticDisconnection, iconReflectList, IPv6test } from '@/store/setti
 
 import type { Proxy } from '@/types'
 import { last } from 'lodash'
-import { initSmartWeights } from './smart'
+import { clearSmartWeights, initSmartWeights } from './smart'
 import { IPv6Map, proxyGroupList, proxyMap, proxyProviederList } from './state'
 
 const getIPv6FromExtra = (proxy: Proxy) => {
@@ -80,8 +80,10 @@ export const fetchProxies = async (refreshSmartWeights = true) => {
     }
   })
 
-  if (includesSmartGroup && refreshSmartWeights) {
-    initSmartWeights()
+  if (includesSmartGroup) {
+    if (refreshSmartWeights) initSmartWeights()
+  } else {
+    clearSmartWeights()
   }
 }
 

@@ -5,6 +5,13 @@ import { ref } from 'vue'
 
 export const smartWeightsMap = ref<Record<string, Record<string, NodeRank>>>({})
 export const smartOrderMap = ref<Record<string, Record<string, number>>>({})
+let smartWeightsRequestId = 0
+
+export const clearSmartWeights = () => {
+  smartWeightsRequestId++
+  smartWeightsMap.value = {}
+  smartOrderMap.value = {}
+}
 
 export type SmartWeightHistoryEntry = {
   groupName: string
@@ -124,6 +131,7 @@ const restructWeights = (proxyName: string, weights: NodeRank[]) => {
 }
 
 export const initSmartWeights = async () => {
+  const requestId = ++smartWeightsRequestId
   let smartWeights: Record<string, NodeRank[]> | null = null
 
   try {
@@ -132,8 +140,9 @@ export const initSmartWeights = async () => {
     smartWeights = null
   }
 
-  smartWeightsMap.value = {}
-  smartOrderMap.value = {}
+  if (requestId !== smartWeightsRequestId) return
+
+  clearSmartWeights()
 
   if (!smartWeights) return
 

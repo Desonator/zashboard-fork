@@ -111,7 +111,9 @@ const typeDescription = computed(() => {
 const isSmartGroup = computed(
   () => proxyMap.value[props.groupName ?? '']?.type.toLowerCase() === 'smart',
 )
-const smartWeight = computed(() => smartWeightsMap.value[props.groupName ?? '']?.[props.name])
+const smartWeight = computed(() =>
+  isSmartGroup.value ? smartWeightsMap.value[props.groupName ?? '']?.[props.name] : undefined,
+)
 const smartWeightAccentFor = (rank: string) => {
   switch (rank) {
     case 'MostUsed':

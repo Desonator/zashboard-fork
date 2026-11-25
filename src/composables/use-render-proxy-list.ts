@@ -1,5 +1,5 @@
-import { latencyMapOf, smartOrderMap, type LatencyMap } from '@/assembly/proxies'
-import { NOT_CONNECTED, PROXY_SORT_TYPE } from '@/constant'
+import { latencyMapOf, proxyMap, smartOrderMap, type LatencyMap } from '@/assembly/proxies'
+import { NOT_CONNECTED, PROXY_SORT_TYPE, PROXY_TYPE } from '@/constant'
 import { isProxyGroup } from '@/helper'
 import {
   isProxyNodeSearchMode,
@@ -66,7 +66,12 @@ const filterProxies = (
 }
 
 const sortProxies = (proxies: string[], groupName: string | undefined, latencyMap: LatencyMap) => {
-  if (groupName && useSmartGroupSort.value && smartOrderMap.value[groupName]) {
+  if (
+    groupName &&
+    proxyMap.value[groupName]?.type.toLowerCase() === PROXY_TYPE.Smart &&
+    useSmartGroupSort.value &&
+    smartOrderMap.value[groupName]
+  ) {
     return sortBySmartOrder(proxies, smartOrderMap.value[groupName])
   }
 
