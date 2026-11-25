@@ -94,9 +94,11 @@ const handlerHistoryTip = (e: Event) => {
     if (index === statusHistoryIndex && typeof pingConfigHistory?.alive === 'boolean') {
       const dataTransferStatus = document.createElement('span')
       dataTransferStatus.classList.add(
-        'ml-auto',
+        'border-l',
+        'border-base-content/20',
+        'pl-2',
         'text-xs',
-        pingConfigHistory.alive ? 'text-success' : 'text-error',
+        'text-base-content/60',
       )
       dataTransferStatus.textContent = t(
         pingConfigHistory.alive ? 'dataTransferOk' : 'dataTransferFailed',

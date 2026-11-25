@@ -112,8 +112,8 @@ const isSmartGroup = computed(
   () => proxyMap.value[props.groupName ?? '']?.type.toLowerCase() === 'smart',
 )
 const smartWeight = computed(() => smartWeightsMap.value[props.groupName ?? '']?.[props.name])
-const smartWeightAccent = computed(() => {
-  switch (smartWeight.value?.Rank) {
+const smartWeightAccentFor = (rank: string) => {
+  switch (rank) {
     case 'MostUsed':
       return 'bg-success/15 text-success'
     case 'OccasionalUsed':
@@ -121,7 +121,8 @@ const smartWeightAccent = computed(() => {
     default:
       return 'bg-base-300/70 text-base-content/70'
   }
-})
+}
+const smartWeightAccent = computed(() => smartWeightAccentFor(smartWeight.value?.Rank ?? ''))
 const formatSmartWeight = (weight: number) =>
   Number.isInteger(weight) ? weight.toString() : weight.toFixed(1)
 const showWeightHistory = (event: MouseEvent) => {
@@ -129,11 +130,6 @@ const showWeightHistory = (event: MouseEvent) => {
 
   const content = document.createElement('div')
   content.classList.add('flex', 'flex-col', 'gap-1')
-
-  const title = document.createElement('div')
-  title.classList.add('mb-1', 'font-medium', 'text-base-content/75')
-  title.textContent = t('smartWeightHistory')
-  content.append(title)
 
   if (!history.length) {
     const empty = document.createElement('div')
@@ -146,12 +142,16 @@ const showWeightHistory = (event: MouseEvent) => {
     const row = document.createElement('div')
     const time = document.createElement('span')
     const weight = document.createElement('span')
+    const rank = document.createElement('span')
 
-    row.classList.add('flex', 'items-center', 'justify-between', 'gap-3')
+    row.classList.add('flex', 'items-center', 'gap-2')
     time.textContent = dayjs(entry.time).format('YYYY-MM-DD HH:mm:ss')
-    weight.classList.add('tabular-nums')
-    weight.textContent = `${formatSmartWeight(entry.weight)} · ${t(entry.rank)}`
-    row.append(time, weight)
+    weight.classList.add('shrink-0', 'rounded', 'px-1', 'text-[10px]', 'leading-4', 'tabular-nums')
+    weight.classList.add(...smartWeightAccentFor(entry.rank).split(' '))
+    weight.textContent = formatSmartWeight(entry.weight)
+    rank.classList.add('text-base-content/60')
+    rank.textContent = t(entry.rank)
+    row.append(time, weight, rank)
     content.append(row)
   }
 

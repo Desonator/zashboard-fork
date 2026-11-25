@@ -93,7 +93,6 @@ const zhTW: LANG_MESSAGE = {
   speedtestUrl: '測速地址',
   dataTransferOk: '資料傳輸正常',
   dataTransferFailed: '資料傳輸失敗',
-  smartWeightHistory: 'Smart權重歷史',
   smartWeightHistoryEmpty: '尚未記錄權重快照。',
   providerHealthSummary: '可用節點：{available}/{total}',
   providerUpdatedAt: '上次更新：{time}',

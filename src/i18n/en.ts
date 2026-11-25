@@ -91,7 +91,6 @@ const en = {
   speedtestUrl: 'Speedtest URL',
   dataTransferOk: 'Data transfer OK',
   dataTransferFailed: 'Data transfer failed',
-  smartWeightHistory: 'Smart weight history',
   smartWeightHistoryEmpty: 'No weight snapshots have been recorded yet.',
   providerHealthSummary: 'Available nodes: {available}/{total}',
   providerUpdatedAt: 'Last updated: {time}',

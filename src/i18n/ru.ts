@@ -93,7 +93,6 @@ const ru: LANG_MESSAGE = {
   speedtestUrl: 'URL теста скорости',
   dataTransferOk: 'Передача данных OK',
   dataTransferFailed: 'Передача данных: сбой',
-  smartWeightHistory: 'История Smart-веса',
   smartWeightHistoryEmpty: 'История появится после первого снимка весов.',
   providerHealthSummary: 'Доступно узлов: {available}/{total}',
   providerUpdatedAt: 'Последнее обновление: {time}',
