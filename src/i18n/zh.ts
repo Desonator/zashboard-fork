@@ -342,6 +342,8 @@ const zh: LANG_MESSAGE = {
   general: '通用',
   groupProxiesByProvider: '节点根据提供商分组',
   useSmartGroupSort: 'Smart组根据使用频率排序',
+  displaySmartStatusBar: '显示Smart组状态栏',
+  smartStatusBar: 'Smart',
   all: '全部',
   autoDisconnectIdleUDP: '自动断开空闲UDP',
   autoDisconnectIdleUDPTime: 'UDP空闲时间',

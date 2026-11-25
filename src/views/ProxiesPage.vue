@@ -14,6 +14,12 @@
       <ProxiesCtrl />
       <FolderTopBar v-if="foldersUiVisible" />
       <div
+        v-if="showSmartStatusBar"
+        class="px-3 pt-2 md:pr-2"
+      >
+        <SmartStatusBar />
+      </div>
+      <div
         ref="columnsRef"
         class="flex gap-3 p-3 md:pr-2"
       >
@@ -51,12 +57,17 @@ import ProxyGroup from '@/components/proxies/ProxyGroup.vue'
 import ProxyGroupForMobile from '@/components/proxies/ProxyGroupForMobile.vue'
 import ProxyProvider from '@/components/proxies/ProxyProvider.vue'
 import ProxyGroupChainModal from '@/components/proxies/ProxyGroupChainModal.vue'
+import SmartStatusBar from '@/components/proxies/SmartStatusBar.vue'
 import { usePaddingForViews } from '@/composables/use-padding-for-views'
 import { disableProxiesPageScroll, renderProxiesPageItems } from '@/helper/proxies'
 import { PROXY_TAB_TYPE } from '@/constant'
 import { isMiddleScreen } from '@/helper/utils'
-import { fetchProxies } from '@/assembly/proxies'
-import { disableProxiesPageTextSelect, twoColumnProxyGroup } from '@/store/settings'
+import { fetchProxies, hasSmartGroup } from '@/assembly/proxies'
+import {
+  disableProxiesPageTextSelect,
+  displaySmartStatusBar,
+  twoColumnProxyGroup,
+} from '@/store/settings'
 import { folderManagerOpen, isProxyFolderModeActive } from '@/store/proxy-folders'
 import { useResizeObserver, useSessionStorage } from '@vueuse/core'
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
@@ -275,6 +286,13 @@ const estimatedCardHeight = computed(() => (cardType.value === 'mobile' ? 88 : 1
 
 const foldersUiVisible = computed(
   () => isProxyFolderModeActive.value && proxiesTabShow.value === PROXY_TAB_TYPE.PROXIES,
+)
+
+const showSmartStatusBar = computed(
+  () =>
+    proxiesTabShow.value === PROXY_TAB_TYPE.PROXIES &&
+    hasSmartGroup.value &&
+    displaySmartStatusBar.value,
 )
 
 const displayTwoColumns = computed(() => {

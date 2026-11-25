@@ -307,10 +307,8 @@ export const proxyGroupFilterMap = useStorage<Record<string, string>>(
   {},
 )
 export const displayFinalOutbound = useStorage('config/show-selected-for-now-node', false)
-export const displaySmartTopNodes = useStorage(
-  'config/show-smart-top-nodes',
-  displayFinalOutbound.value,
-)
+export const displaySmartTopNodes = useStorage('config/show-smart-top-nodes', true)
+export const displaySmartStatusBar = useStorage('config/show-smart-status-bar', true)
 export const twoColumnProxyGroup = useStorage('config/two-columns', true)
 export const proxyFolderMode = useStorage<FOLDER_MODE>(
   'config/proxy-folder-mode-setting',
@@ -368,7 +366,7 @@ export const iconReflectList = useStorage<
   }[]
 >('config/icon-reflect-list', [])
 export const groupProxiesByProvider = useStorage('config/group-proxies-by-provider', false)
-export const useSmartGroupSort = useStorage('config/use-smart-group-sort', false)
+export const useSmartGroupSort = useStorage('config/use-smart-group-sort', true)
 
 export const connectionDisplayStyle = useStorage<CONNECTION_DISPLAY_STYLE>(
   'config/connection-display-style',

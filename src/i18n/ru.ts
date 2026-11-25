@@ -356,6 +356,8 @@ const ru: LANG_MESSAGE = {
   general: 'Универсальный',
   groupProxiesByProvider: 'Группировать прокси по провайдеру',
   useSmartGroupSort: 'Сортировать Smart группы по частоте использования',
+  displaySmartStatusBar: 'Показывать строку статистики Smart-групп',
+  smartStatusBar: 'Smart',
   all: 'Все',
   autoDisconnectIdleUDP: 'Автоматически отключить UDP-идле',
   autoDisconnectIdleUDPTime: 'Время UDP-идле',
@@ -388,7 +390,8 @@ const ru: LANG_MESSAGE = {
   displayFinalOutbound: 'Показывать конечный узел',
   displaySmartTopNodes: 'Показывать топ-3 узла Smart в цепочке',
   smartTopNodes: 'Топ Smart:',
-  smartTopTooltip: 'Три узла Smart с наибольшим весом; это кандидаты, а не фактический маршрут соединения.',
+  smartTopTooltip:
+    'Три узла Smart с наибольшим весом; это кандидаты, а не фактический маршрут соединения.',
   groupTestUrls: 'Группа тестовых URL',
   groupTestUrlsTip:
     'Для ручных тестов, запущенных из панели, установите тестовые URL > URL в конфигурации > Глобальные тестовые URL, но для групп с UrlTest/Fallback и т.д., URL в конфигурации все равно нужно изменить, поэтому это рекомендуется только для Selector и т.д. ',

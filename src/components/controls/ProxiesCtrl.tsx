@@ -20,6 +20,7 @@ import {
   collapseGroupMap,
   disableProxiesPageTextSelect,
   displayFinalOutbound,
+  displaySmartStatusBar,
   displaySmartTopNodes,
   groupProxiesByProvider,
   hideUnavailableProxies,
@@ -315,14 +316,26 @@ export default defineComponent({
                     v-model={displayFinalOutbound.value}
                   />
                 </div>
-                <div class="setting-item">
-                  <div class="setting-item-label">{t('displaySmartTopNodes')}</div>
-                  <input
-                    class="toggle"
-                    type="checkbox"
-                    v-model={displaySmartTopNodes.value}
-                  />
-                </div>
+                {hasSmartGroup.value && (
+                  <>
+                    <div class="setting-item">
+                      <div class="setting-item-label">{t('displaySmartTopNodes')}</div>
+                      <input
+                        class="toggle"
+                        type="checkbox"
+                        v-model={displaySmartTopNodes.value}
+                      />
+                    </div>
+                    <div class="setting-item">
+                      <div class="setting-item-label">{t('displaySmartStatusBar')}</div>
+                      <input
+                        class="toggle"
+                        type="checkbox"
+                        v-model={displaySmartStatusBar.value}
+                      />
+                    </div>
+                  </>
+                )}
                 <div class="setting-item">
                   <div class="setting-item-label">{t('disableProxiesPageTextSelect')}</div>
                   <input

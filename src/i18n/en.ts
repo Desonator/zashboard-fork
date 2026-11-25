@@ -353,6 +353,8 @@ const en = {
   general: 'General',
   groupProxiesByProvider: 'Group proxies by provider',
   useSmartGroupSort: 'Sort smart groups by usage frequency',
+  displaySmartStatusBar: 'Show Smart group status row',
+  smartStatusBar: 'Smart',
   all: 'All',
   autoDisconnectIdleUDP: 'Auto-disconnect idle UDP connections',
   autoDisconnectIdleUDPTime: 'UDP idle time',
@@ -385,7 +387,8 @@ const en = {
   displayFinalOutbound: 'Show final outbound node',
   displaySmartTopNodes: 'Show Smart top 3 in the chain',
   smartTopNodes: 'Smart top:',
-  smartTopTooltip: 'The three Smart nodes with the highest weights; these are candidates, not the actual route of a connection.',
+  smartTopTooltip:
+    'The three Smart nodes with the highest weights; these are candidates, not the actual route of a connection.',
   groupTestUrls: 'Group test URLs',
   groupTestUrlsTip:
     'For manual tests triggered from the dashboard, URL priority is: URLs set here > URLs in configuration > global test URLs. For groups like UrlTest/Fallback, you still need to modify URLs in the configuration, so this is mainly recommended for Selector scenarios.',

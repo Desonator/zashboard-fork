@@ -342,6 +342,8 @@ const zhTW: LANG_MESSAGE = {
   general: '通用',
   groupProxiesByProvider: '節點根據提供商分組',
   useSmartGroupSort: 'Smart組根據使用頻率排序',
+  displaySmartStatusBar: '顯示Smart組狀態列',
+  smartStatusBar: 'Smart',
   all: '全部',
   autoDisconnectIdleUDP: '自動斷開空閒UDP',
   autoDisconnectIdleUDPTime: 'UDP空閒時間',
