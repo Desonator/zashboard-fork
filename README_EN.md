@@ -1,90 +1,113 @@
 # Zashboard Fork
 
-This repository contains a personal fork of [Zashboard](https://github.com/Zephyruso/zashboard), a web dashboard for Clash-compatible cores. Fork-specific changes include Smart proxy-group weight indicators and update checks that point to this repository.
+[Русская версия](./README.md) · [Releases](https://github.com/Desonator/zashboard-fork/releases) · [Builds](https://github.com/Desonator/zashboard-fork/actions)
+
+Zashboard is a web dashboard for managing proxies and monitoring a network core through its API. This repository is a fork of [Zephyruso/Zashboard](https://github.com/Zephyruso/zashboard), with additional Smart-group features and its own release channel.
 
 <p align="center">
-  <img src="./readme/pc.png" height="300" alt="Zashboard desktop interface">
-  <img src="./readme/mobile.png" height="300" alt="Zashboard mobile interface">
+  <img src="./readme/pc.png" height="300" alt="Zashboard on desktop">
+  <img src="./readme/mobile.png" height="300" alt="Zashboard on mobile">
 </p>
 
-## Browser requirements
+## Zashboard features
 
-- Chrome 111 or newer
-- Firefox 128 or newer
-- Safari 16.4 or newer
-- Jailbroken iOS 16.4 is not supported
+- Browse and select proxies, manage groups and providers.
+- Test node and group latency, view measurement history, and filter by availability.
+- Monitor connections, traffic, and runtime statistics; inspect logs and routing rules.
+- Save multiple backend connections and customize themes, fonts, and CSS; install the dashboard as a PWA.
+- Works with Mihomo and Clash API-compatible cores; the DAE API is also supported. Specific features depend on the connected core's API.
 
-## Download and installation
+## Features added by this fork
 
-Download `dist.zip` from the [fork's Releases page](https://github.com/Desonator/zashboard-fork/releases). Extract it and serve the contents of the `dist` directory as the external UI for your Clash-compatible core. GitHub Actions builds this installable archive; the source-code archives on the Releases page are not UI packages.
+### Smart groups
 
-To have the core download this fork when you use its UI upgrade feature, set the core's `external-ui-url` to a release archive from this repository. For example:
+When the core reports groups with `type: smart` and exposes Smart weights, the dashboard can show:
+
+- a responsive status row with the node count, weights, and latency;
+- weight and usage rank on node cards;
+- a local history of Smart-weight changes in a tooltip;
+- the three highest-weight nodes in a group's chain;
+- sorting of Smart-group nodes by usage frequency.
+
+Each Smart-specific feature is shown only when Smart groups are present in API data. On official Mihomo without Smart groups, the related settings and indicators are hidden while ordinary proxy groups remain available. The final-outbound setting is generic and can be used without Smart. The three highest-weight nodes are Smart candidates, not a guaranteed route for an individual connection.
+
+Weight history is stored locally in the browser and kept separately for each backend. The dashboard records changes only and does not add network polling for this history.
+
+### Latency and nested groups
+
+- While the proxies page is open and the browser tab is visible, proxy data is refreshed every 10 seconds. Data is refreshed when returning to the tab as well.
+- If a group has no history for its own test URL, latency can be resolved from the active nested proxy chain.
+- The latency tooltip shows measurement history. A `ping-config` data-transfer status is shown when the core returns the corresponding profile and result.
+- Proxy cards have a medium size option in addition to small and large.
+
+### Fork updates
+
+The dashboard checks releases from `Desonator/zashboard-fork`. To let the core download updates to this panel, set its `external-ui-url` to an archive from this fork:
 
 ```yaml
-external-ui: ui
+external-ui: ./ui
 external-ui-url: https://github.com/Desonator/zashboard-fork/releases/latest/download/dist.zip
 ```
 
-The dashboard checks for releases in this fork. The core downloads the UI archive from `external-ui-url`; changing the dashboard's release check does not change that core setting.
+The dashboard's update check and the core's `external-ui-url` are separate settings: the first selects the repository used for update notifications, and the second tells the core where to download the panel files.
 
-## Smart proxy groups
+## Installation
 
-When the connected core exposes Smart-group weights through its API, the dashboard can show each Smart node's weight and ping in a responsive status row, as well as a weight badge and usage rank on its proxy card. The weight badge uses a restrained color accent based on the rank. Optional settings control this row, sorting Smart groups by usage frequency, and showing the three highest-weight Smart nodes in the proxy chain. These are the top candidates by weight and do not necessarily represent the route used by an individual connection. Weight information requires a core that supports the relevant Smart API and returns the data.
+1. Download `dist.zip` from the [Releases page](https://github.com/Desonator/zashboard-fork/releases).
+2. Extract it and serve the `dist` directory as the external UI for your core or web server.
+3. Connect to the core API. If the dashboard is served from the API's origin and no backend is saved yet, Zashboard tries to connect automatically. Otherwise, enter the API address and secret on the setup page.
 
-Hovering a Smart weight shows locally recorded weight/rank changes for that backend. The dashboard records a point only when the value changes; it does not add polling. The existing ping tooltip also shows group test details returned by the core, and displays Prizrak-Core's additional `ping-config` status only when the API provides that profile and result. Provider availability and exact update time appear as tooltip details when the core returns those fields.
+`dist.zip` contains the ready-to-serve dashboard. GitHub's `Source code` archives contain source files and are not installable UI packages.
 
-## Build from source
+### Build from source
 
 Requirements: Node.js 22 and pnpm.
 
 ```sh
 pnpm install --frozen-lockfile
-pnpm run build
+pnpm build
 ```
 
-The production files are written to `dist/`. GitHub Actions builds an artifact when changes are pushed to `main`. Pushing a `v*` tag builds a GitHub Release with `dist.zip` attached. See [Actions](https://github.com/Desonator/zashboard-fork/actions) for build status and artifacts.
+The production site is written to `dist/`. To build and run a local container:
 
-## Tips
+```sh
+docker build -t zashboard-fork .
+docker run --rm -p 8080:80 zashboard-fork
+```
 
-1. Drag the connection table with the left mouse button. Right-click a cell to copy its contents.
-2. Right-click a proxy or proxy-group card to run a speed test.
-3. Proxy groups are ordered according to their nodes in the `GLOBAL` group, which follows the configuration order. Override `GLOBAL` if you need a custom order.
-4. The dashboard supports PWA installation through your browser's “Add to Home Screen” feature.
-5. Proxy cards can be displayed in small, medium, or large sizes; the grid adjusts the number of cards per row to fit the available width.
+GitHub Actions builds the project on pushes to `main`. Pushing a version tag such as `vX.Y.Z` builds and publishes a GitHub Release with `dist.zip`.
 
-## URL parameters
+## Browsers
 
-Basic example:
+- Chrome 111+
+- Firefox 128+
+- Safari 16.4+
+- Jailbroken iOS 16.4 is not supported.
+
+## Connect through URL parameters
+
+Basic format:
 
 ```text
-http://host:port/#/setup?hostname=ipordomain&port=9090&secret=123456
+http://host:port/#/setup?hostname=192.168.1.1&port=9090&secret=...
 ```
 
-- `protocol`: `http` or `https`; defaults to the current page protocol. Legacy `http=1` and `https=1` flags are supported, but `protocol` takes precedence.
-- `hostname`: Clash API IP address or domain.
-- `port`: Clash API port.
-- `secondaryPath`: Optional path appended to the base URL; defaults to empty.
-- `secret`: API authentication password.
-- `disableUpgradeCore=1`: Hides the core upgrade button.
-- `disableTunMode=1`: Hides the TUN switch.
+Supported parameters include `protocol`, `hostname`, `port`, `secondaryPath`, `secret`, `label`, `type=dae`, `disableUpgradeCore=1`, and `disableTunMode=1`. The values `disableUpgradeCore=core` and `disableTunMode=tun` also hide those controls. Parameters can be placed in the page's query string or after `?` in the URL fragment; if repeated, the fragment value takes precedence. The secret is sent in clear text as part of the URL; use this only in an appropriate environment and never publish a URL containing a real secret.
 
-### Automatic backend connection
+If no backend has been saved and `hostname` is omitted, the dashboard probes the current page's origin. It also tries `http://127.0.0.1:9090` as a fallback. When authentication is rejected, the address remains in the form so you can enter the secret manually.
 
-When no backend has been saved and `hostname` is absent, the dashboard tries the page's origin as the Clash API address. URL parameters such as `secret`, `label`, `type`, `disableUpgradeCore`, and `disableTunMode` are applied to that backend. `protocol` and `port` do not change the detected same-origin address.
+## Developer checks
 
-For example, with this configuration on `192.168.1.1`:
+See [`test/README.md`](./test/README.md) for load, browser, and regression scenarios. Common commands:
 
-```yaml
-external-ui: ui
-external-ui-url: https://github.com/Desonator/zashboard-fork/releases/latest/download/dist.zip
-external-controller: 0.0.0.0:9090
-secret: ''
+```sh
+pnpm build
+pnpm test:bench
+pnpm test:verify
+pnpm test:setup
+node test/collapse.mjs
 ```
 
-Opening `http://192.168.1.1:9090/ui` tries to connect to `http://192.168.1.1:9090` and saves the backend if the API responds. If authentication is enabled, pass the secret, for example `http://192.168.1.1:9090/ui?secret=your-secret`.
+## Upstream and license
 
-The dashboard also probes `http://127.0.0.1:9090` with an empty secret as a fallback. The same-origin backend takes priority. If authentication is rejected, the detected address remains in the form so you can enter the secret. If no candidate responds, the form offers `http://127.0.0.1:9090` for manual setup. Editing or submitting the form cancels detection. Saved backends and explicit URL backend parameters keep their existing behavior.
-
-## Credits
-
-This fork is based on [Zephyruso/Zashboard](https://github.com/Zephyruso/zashboard). If you would like to donate, please consider supporting [UNICEF](https://www.unicef.org/).
+This fork is based on [Zephyruso/Zashboard](https://github.com/Zephyruso/zashboard). The project is licensed under [MIT](./LICENSE). For fork-specific issues, use the [repository issue tracker](https://github.com/Desonator/zashboard-fork/issues).
