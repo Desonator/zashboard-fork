@@ -110,12 +110,19 @@ const handlerHistoryTip = (e: Event) => {
       statusRow.classList.add('flex', 'h-5', 'items-center', 'whitespace-nowrap')
 
       if (index === statusHistoryIndex && typeof pingConfigHistory?.alive === 'boolean') {
+        const dataTransferLabel = document.createElement('span')
         const dataTransferStatus = document.createElement('span')
-        dataTransferStatus.classList.add(pingConfigHistory.alive ? 'text-success' : 'text-error/80')
-        dataTransferStatus.textContent = t(
-          pingConfigHistory.alive ? 'dataTransferOk' : 'dataTransferFailed',
+
+        dataTransferLabel.classList.add('text-base-content/60')
+        dataTransferLabel.textContent = t('dataTransferLabel')
+        dataTransferStatus.classList.add(
+          pingConfigHistory.alive ? 'text-low-latency' : 'text-high-latency',
         )
-        statusRow.append(dataTransferStatus)
+        dataTransferStatus.textContent = t(
+          pingConfigHistory.alive ? 'dataTransferStatusOk' : 'dataTransferStatusFailed',
+        )
+        statusRow.classList.add('gap-1')
+        statusRow.append(dataTransferLabel, dataTransferStatus)
       }
 
       statusColumn.append(statusRow)
