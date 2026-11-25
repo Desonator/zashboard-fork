@@ -17,7 +17,8 @@ export const getTestUrl = (groupName?: string) => {
   if (!groupName) return TEST_URL
 
   const proxyNode =
-    proxyMap.value[groupName] || proxyProviederList.value.find((provider) => provider.name === groupName)
+    proxyMap.value[groupName] ||
+    proxyProviederList.value.find((provider) => provider.name === groupName)
 
   return proxyNode?.testUrl || TEST_URL
 }
@@ -39,7 +40,12 @@ const readHistory = (proxyName: string, testUrl: string) => {
     }
 
     if (proxyNode.extra) {
-      return proxyNode.extra[testUrl]?.history
+      const testUrlHistory = proxyNode.extra[testUrl]?.history
+
+      if (testUrlHistory?.length) return testUrlHistory
+      if (proxyNode.all?.length && proxyNode.history?.length) return proxyNode.history
+
+      return testUrlHistory
     }
   }
 
@@ -92,6 +98,11 @@ export const getHistoryByName = (proxyName: string, groupName?: string) => {
     if (!proxyNode) {
       return []
     }
+
+    const testUrlHistory = proxyNode.extra?.[url]?.history
+
+    if (testUrlHistory?.length) return testUrlHistory
+    if (proxyNode.all?.length && proxyNode.history?.length) return proxyNode.history
 
     if (!proxyNode?.extra) {
       const nowNode = proxyMap.value[getNowProxyNodeName(proxyName)]
