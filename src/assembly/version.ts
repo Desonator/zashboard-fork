@@ -1,7 +1,7 @@
 import DaeLogo from '@/assets/images/dae.jpg'
 import HonkLogo from '@/assets/images/honk.svg'
 import MetacubexLogo from '@/assets/images/metacubex.jpg'
-import { MIHOMO, MIHOMO_CHANNEL } from '@/constant'
+import { MIHOMO, MIHOMO_CHANNEL, ZASHBOARD_LATEST_RELEASE_API } from '@/constant'
 import { fetchWithLocalCache } from '@/helper/cache'
 import { getRequestErrorMessage } from '@/helper/request-error'
 import { autoUpgradeDashboard } from '@/store/settings'
@@ -139,14 +139,18 @@ const fetchIsCoreUpdateAvailable = async () => {
 }
 
 export const checkUIUpdate = async () => {
-  const { tag_name } = await fetchWithLocalCache<{ tag_name: string }>(
-    'https://api.github.com/repos/Zephyruso/zashboard/releases/latest',
-    zashboardVersion.value,
-  )
+  try {
+    const { tag_name } = await fetchWithLocalCache<{ tag_name: string }>(
+      ZASHBOARD_LATEST_RELEASE_API,
+      zashboardVersion.value,
+    )
 
-  isUIUpdateAvailable.value = Boolean(tag_name && tag_name !== `v${zashboardVersion.value}`)
+    isUIUpdateAvailable.value = Boolean(tag_name && tag_name !== `v${zashboardVersion.value}`)
 
-  if (isUIUpdateAvailable.value && autoUpgradeDashboard.value) {
-    upgradeUI().catch(() => {})
+    if (isUIUpdateAvailable.value && autoUpgradeDashboard.value) {
+      upgradeUI().catch(() => {})
+    }
+  } catch {
+    isUIUpdateAvailable.value = false
   }
 }

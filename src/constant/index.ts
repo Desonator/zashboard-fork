@@ -13,6 +13,9 @@ export const IS_APPLE_DEVICE = /Mac|iPod|iPhone|iPad/.test(navigator.platform)
 export const GLOBAL = 'GLOBAL'
 export const TEST_URL = 'https://www.gstatic.com/generate_204'
 export const IPV6_TEST_URL = 'https://ipv6.google.com/generate_204'
+export const ZASHBOARD_REPOSITORY = 'Desonator/zashboard-fork'
+export const ZASHBOARD_REPOSITORY_URL = `https://github.com/${ZASHBOARD_REPOSITORY}`
+export const ZASHBOARD_LATEST_RELEASE_API = `https://api.github.com/repos/${ZASHBOARD_REPOSITORY}/releases/latest`
 export const NOT_CONNECTED = 0
 export enum LANG {
   EN_US = 'en-US',
