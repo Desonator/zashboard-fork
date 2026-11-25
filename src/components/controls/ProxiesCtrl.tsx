@@ -266,16 +266,6 @@ export default defineComponent({
                   <div class="setting-item-label">{t('sortBy')}</div>
                   {sort}
                 </div>
-                {hasSmartGroup.value && (
-                  <div class="setting-item">
-                    <div class="setting-item-label">{t('useSmartGroupSort')}</div>
-                    <input
-                      class="toggle"
-                      type="checkbox"
-                      v-model={useSmartGroupSort.value}
-                    />
-                  </div>
-                )}
                 <div class="setting-item">
                   <div class="setting-item-label">{t('groupProxiesByProvider')}</div>
                   <input
@@ -319,6 +309,14 @@ export default defineComponent({
                 {hasSmartGroup.value && (
                   <>
                     <div class="setting-item">
+                      <div class="setting-item-label">{t('displaySmartStatusBar')}</div>
+                      <input
+                        class="toggle"
+                        type="checkbox"
+                        v-model={displaySmartStatusBar.value}
+                      />
+                    </div>
+                    <div class="setting-item">
                       <div class="setting-item-label">{t('displaySmartTopNodes')}</div>
                       <input
                         class="toggle"
@@ -327,11 +325,11 @@ export default defineComponent({
                       />
                     </div>
                     <div class="setting-item">
-                      <div class="setting-item-label">{t('displaySmartStatusBar')}</div>
+                      <div class="setting-item-label">{t('useSmartGroupSort')}</div>
                       <input
                         class="toggle"
                         type="checkbox"
-                        v-model={displaySmartStatusBar.value}
+                        v-model={useSmartGroupSort.value}
                       />
                     </div>
                   </>

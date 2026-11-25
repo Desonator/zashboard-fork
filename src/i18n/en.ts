@@ -354,7 +354,7 @@ const en = {
   groupProxiesByProvider: 'Group proxies by provider',
   useSmartGroupSort: 'Sort smart groups by usage frequency',
   displaySmartStatusBar: 'Show Smart group status row',
-  smartStatusBar: 'Smart',
+  smartStatusBar: 'Smart group',
   all: 'All',
   autoDisconnectIdleUDP: 'Auto-disconnect idle UDP connections',
   autoDisconnectIdleUDPTime: 'UDP idle time',

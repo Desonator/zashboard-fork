@@ -1,17 +1,21 @@
 <template>
   <div
     v-if="smartNodes.length"
-    class="bg-base-200/60 flex flex-wrap items-center gap-1.5 rounded-lg p-1.5"
+    class="bg-base-100 flex flex-wrap items-center rounded-xl px-2 py-1 shadow-xs"
   >
-    <div class="text-base-content/70 shrink-0 px-1.5 text-xs font-medium">
+    <div
+      class="text-base-content/75 flex shrink-0 items-center gap-1.5 px-1.5 py-1 text-xs font-medium"
+    >
       {{ t('smartStatusBar') }}
-      <span class="tabular-nums">· {{ smartNodes.length }}</span>
+      <span class="bg-base-200 text-base-content/85 rounded-full px-1.5 py-0.5 tabular-nums">
+        {{ smartNodes.length }}
+      </span>
     </div>
-    <div class="flex min-w-0 flex-1 flex-wrap gap-1.5">
+    <div class="flex min-w-0 flex-1 flex-wrap">
       <div
         v-for="node in smartNodes"
         :key="`${node.groupName}:${node.name}`"
-        class="bg-base-100 flex max-w-full min-w-0 items-center gap-1.5 rounded-md px-2 py-1 text-xs"
+        class="border-base-content/15 flex max-w-full min-w-0 items-center gap-1.5 border-l px-2 py-1 text-xs"
         :title="`${node.groupName} · ${node.name} · ${t(node.rank)} · ${node.latency > 0 ? `${node.latency} ms` : t('noData')}`"
       >
         <span class="text-base-content/80 shrink-0">{{ shortenName(node.name) }}</span>

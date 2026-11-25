@@ -357,7 +357,7 @@ const ru: LANG_MESSAGE = {
   groupProxiesByProvider: 'Группировать прокси по провайдеру',
   useSmartGroupSort: 'Сортировать Smart группы по частоте использования',
   displaySmartStatusBar: 'Показывать строку статистики Smart-групп',
-  smartStatusBar: 'Smart',
+  smartStatusBar: 'Smart группа',
   all: 'Все',
   autoDisconnectIdleUDP: 'Автоматически отключить UDP-идле',
   autoDisconnectIdleUDPTime: 'Время UDP-идле',
