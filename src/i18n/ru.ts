@@ -239,6 +239,7 @@ const ru: LANG_MESSAGE = {
   tableSize: 'Размер таблицы',
   proxyCardSize: 'Размер карточки прокси',
   small: 'Маленький',
+  medium: 'Средний',
   normal: 'Нормальный',
   large: 'Большой',
 

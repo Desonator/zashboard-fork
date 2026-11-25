@@ -273,11 +273,13 @@ export enum TABLE_SIZE {
 
 export enum PROXY_CARD_SIZE {
   SMALL = 'small',
+  MEDIUM = 'medium',
   LARGE = 'large',
 }
 
 export enum MIN_PROXY_CARD_WIDTH {
   SMALL = 130,
+  MEDIUM = 138,
   LARGE = 145,
 }
 

@@ -94,7 +94,14 @@ export const getLabelFromBackend = (end: Omit<Backend, 'uuid'>) => {
 }
 
 export const getMinCardWidth = (size: PROXY_CARD_SIZE) => {
-  return size === PROXY_CARD_SIZE.LARGE ? MIN_PROXY_CARD_WIDTH.LARGE : MIN_PROXY_CARD_WIDTH.SMALL
+  switch (size) {
+    case PROXY_CARD_SIZE.SMALL:
+      return MIN_PROXY_CARD_WIDTH.SMALL
+    case PROXY_CARD_SIZE.MEDIUM:
+      return MIN_PROXY_CARD_WIDTH.MEDIUM
+    default:
+      return MIN_PROXY_CARD_WIDTH.LARGE
+  }
 }
 
 export const PROXIES_PARENT_CLASS = 'proxies-scrollable-parent'

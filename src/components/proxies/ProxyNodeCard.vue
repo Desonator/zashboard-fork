@@ -4,8 +4,8 @@
     @contextmenu.stop.prevent="handlerLatencyTest"
   >
     <div
-      class="flex w-full min-w-0 flex-1 items-center gap-1 text-sm"
-      :class="truncateProxyName && 'truncate'"
+      class="flex w-full min-w-0 flex-1 items-center gap-1"
+      :class="[truncateProxyName && 'truncate', titleSizeClass]"
       @mouseenter="checkTruncation"
     >
       <ProxyIcon
@@ -32,14 +32,18 @@
     <div class="flex min-h-4 w-full min-w-0 items-center justify-between gap-1">
       <div class="flex min-w-0 items-center gap-1 overflow-hidden">
         <span
-          :class="`truncate text-xs tracking-tight ${active ? 'text-primary-content' : 'text-base-content/60'}`"
+          :class="[
+            'truncate tracking-tight',
+            typeDescriptionSizeClass,
+            active ? 'text-primary-content' : 'text-base-content/60',
+          ]"
           @mouseenter="checkTruncation"
         >
           {{ typeDescription }}
         </span>
       </div>
       <LatencyTag
-        :class="[isSmallCard && 'h-4! w-8! rounded-md!', 'shrink-0']"
+        :class="[latencyTagSizeClass, 'shrink-0']"
         :name="node.name"
         :loading="isLatencyTesting"
         :group-name="groupName"
@@ -88,6 +92,16 @@ const typeFormatter = (type: string) => {
   return type
 }
 const isSmallCard = computed(() => proxyCardSize.value === PROXY_CARD_SIZE.SMALL)
+const isMediumCard = computed(() => proxyCardSize.value === PROXY_CARD_SIZE.MEDIUM)
+const titleSizeClass = computed(() => (isMediumCard.value ? 'text-[13px]' : 'text-sm'))
+const typeDescriptionSizeClass = computed(() => (isMediumCard.value ? 'text-[11px]' : 'text-xs'))
+const latencyTagSizeClass = computed(() =>
+  isSmallCard.value
+    ? 'h-4! w-8! rounded-md!'
+    : isMediumCard.value
+      ? 'h-[18px]! w-9! rounded-lg!'
+      : '',
+)
 const typeDescription = computed(() => {
   const type = typeFormatter(node.value.type)
   const isV6 = IPv6test.value && getIPv6ByName(node.value.name) ? 'IPv6' : ''
@@ -154,7 +168,7 @@ const cardClass = computed(() => [
   props.active
     ? 'proxy-active-card bg-primary/95 sm:hover:bg-primary'
     : 'bg-base-200 sm:hover:bg-base-300/50',
-  isSmallCard.value ? 'gap-1 p-1' : 'gap-2 p-2',
+  isSmallCard.value ? 'gap-1 p-1' : isMediumCard.value ? 'gap-1.5 p-1.5' : 'gap-2 p-2',
   latencyTipAnimationClass.value,
 ])
 const handlerLatencyTest = async () => {

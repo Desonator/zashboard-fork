@@ -237,6 +237,7 @@ const en = {
   tableSize: 'Table size',
   proxyCardSize: 'Proxy card size',
   small: 'Small',
+  medium: 'Medium',
   normal: 'Normal',
   large: 'Large',
 

@@ -235,6 +235,7 @@ const zhTW: LANG_MESSAGE = {
   tableSize: '表格尺寸',
   proxyCardSize: '節點卡片尺寸',
   small: '小',
+  medium: '中',
   normal: '正常',
   large: '大',
 

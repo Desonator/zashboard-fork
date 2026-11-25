@@ -50,6 +50,7 @@ The production files are written to `dist/`. GitHub Actions builds an artifact w
 2. Right-click a proxy or proxy-group card to run a speed test.
 3. Proxy groups are ordered according to their nodes in the `GLOBAL` group, which follows the configuration order. Override `GLOBAL` if you need a custom order.
 4. The dashboard supports PWA installation through your browser's “Add to Home Screen” feature.
+5. Proxy cards can be displayed in small, medium, or large sizes; the grid adjusts the number of cards per row to fit the available width.
 
 ## URL parameters
 

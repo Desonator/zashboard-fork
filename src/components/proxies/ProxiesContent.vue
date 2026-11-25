@@ -28,7 +28,11 @@ const columns = computed(() =>
 )
 const rowCount = computed(() => Math.ceil(props.renderProxies.length / columns.value))
 const estimatedCardHeight = computed(() =>
-  proxyCardSize.value === PROXY_CARD_SIZE.SMALL ? 48 : 60,
+  proxyCardSize.value === PROXY_CARD_SIZE.SMALL
+    ? 48
+    : proxyCardSize.value === PROXY_CARD_SIZE.MEDIUM
+      ? 54
+      : 60,
 )
 
 const estimateRowHeight = (rowIndex: number) =>
