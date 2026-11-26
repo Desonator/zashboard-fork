@@ -1,7 +1,7 @@
 <template>
   <div
     v-if="smartNodes.length"
-    class="bg-base-100 flex flex-wrap items-center rounded-xl px-2 py-1 shadow-xs"
+    class="bg-base-100 flex w-full min-w-0 items-center overflow-hidden rounded-xl px-2 py-1 shadow-xs"
   >
     <div
       class="text-base-content/75 flex shrink-0 items-center gap-1.5 px-1.5 py-1 text-xs font-medium"
@@ -11,12 +11,14 @@
         {{ smartNodes.length }}
       </span>
     </div>
-    <div class="flex min-w-0 flex-1 flex-wrap">
+    <div
+      class="smart-status-scroll flex min-w-0 flex-1 flex-wrap max-md:flex-nowrap max-md:overflow-x-auto max-md:overscroll-x-contain max-md:scrollbar-hidden max-md:select-none"
+    >
       <div
         v-for="node in smartNodes"
         :key="`${node.groupName}:${node.name}`"
-        class="border-base-content/15 flex max-w-full min-w-0 items-center gap-1.5 border-l px-2 py-1 text-xs"
-        @mouseenter="showNodeDetails($event, node)"
+        class="border-base-content/15 flex max-w-full min-w-0 items-center gap-1.5 border-l px-2 py-1 text-xs max-md:w-max max-md:max-w-none max-md:shrink-0"
+        @pointerenter="showNodeDetails($event, node)"
       >
         <span class="text-base-content/80 shrink-0">{{ shortenName(node.name) }}</span>
         <span
@@ -79,7 +81,9 @@ const shortenName = (name: string) => {
 const formatWeight = (weight: number) =>
   Number.isInteger(weight) ? weight.toString() : weight.toFixed(1)
 
-const showNodeDetails = (event: MouseEvent, node: SmartStatusNode) => {
+const showNodeDetails = (event: PointerEvent, node: SmartStatusNode) => {
+  if (event.pointerType !== 'mouse') return
+
   const content = document.createElement('div')
   content.classList.add('flex', 'flex-col', 'gap-1')
 
@@ -112,3 +116,9 @@ const weightAccent = (rank: string) => {
   }
 }
 </script>
+
+<style scoped>
+.smart-status-scroll {
+  -webkit-overflow-scrolling: touch;
+}
+</style>
