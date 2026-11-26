@@ -41,8 +41,8 @@ const readHistory = (proxyName: string, testUrl: string) => {
 
     const testUrlHistory = proxyNode.extra?.[testUrl]?.history
 
-    if (testUrlHistory?.length) return testUrlHistory
     if (proxyNode.all?.length && proxyNode.history?.length) return proxyNode.history
+    if (testUrlHistory?.length) return testUrlHistory
 
     const nowNode = proxyMap.value[getNowProxyNodeName(proxyName)]
     const nowTestUrlHistory = nowNode?.extra?.[testUrl]?.history
@@ -105,8 +105,8 @@ export const getHistoryByName = (proxyName: string, groupName?: string) => {
 
     const testUrlHistory = proxyNode.extra?.[url]?.history
 
-    if (testUrlHistory?.length) return testUrlHistory
     if (proxyNode.all?.length && proxyNode.history?.length) return proxyNode.history
+    if (testUrlHistory?.length) return testUrlHistory
 
     const nowNode = proxyMap.value[getNowProxyNodeName(proxyName)]
     const nowTestUrlHistory = nowNode?.extra?.[url]?.history
