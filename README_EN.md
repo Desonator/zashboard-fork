@@ -40,6 +40,20 @@ Weight history is stored locally in the browser and kept separately for each bac
 - The latency tooltip shows measurement history. A `ping-config` data-transfer status is shown when the core returns the corresponding profile and result.
 - Proxy cards have a medium size option in addition to small and large.
 
+### Periodic checks in Prizrak-Core
+
+In Prizrak-Core, `interval` sets the check period, but `lazy` defaults to `true`: background checks are skipped while a group is not selected, so its history does not grow. Set `lazy: false` on the group if you want its history to update even when it is not selected. This also applies to the additional `ping-config` checks.
+
+```yaml
+- name: "Primary"
+  type: fallback
+  url: https://captive.apple.com/generate_204
+  interval: 60
+  lazy: false
+```
+
+See the [Prizrak-Core proxy-group fields](https://core.prizrak.app/config/proxy-groups/) documentation for details.
+
 ### Fork updates
 
 The dashboard checks releases from `Desonator/zashboard-fork`. To let the core download updates to this panel, set its `external-ui-url` to an archive from this fork:
