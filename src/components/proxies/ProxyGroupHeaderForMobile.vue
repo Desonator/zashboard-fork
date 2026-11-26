@@ -41,7 +41,7 @@
       <LatencyTag
         :class="twMerge('bg-base-200/40 hover:bg-base-200/70 z-10')"
         :loading="isLatencyTesting"
-        :name="proxyGroup.now"
+        :name="latencyProxyName"
         :group-name="proxyGroup.name"
         @click.stop="emit('latency-test')"
       />
@@ -90,6 +90,9 @@ const { t } = useI18n()
 const { getShortcutKey } = useKeyboardShortcuts()
 const { showTip } = useTooltip()
 const proxyGroup = computed(() => proxyMap.value[props.name])
+const latencyProxyName = computed(() =>
+  proxyGroup.value.type.toLowerCase() === 'smart' ? proxyGroup.value.name : proxyGroup.value.now,
+)
 
 const downloadTotal = computed(() => getDownloadSpeedByProxyGroup(props.name))
 
