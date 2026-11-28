@@ -23,7 +23,7 @@ Zashboard is a web dashboard for managing proxies and monitoring a network core 
 
 When the core reports groups with `type: smart` and exposes Smart weights, the dashboard can show:
 
-- a single-line status row with the node count, weights, and latency; on narrow screens it can be scrolled horizontally;
+- a single-line status row with the node count, weights, and latency; on narrow screens it scrolls horizontally, and on desktop it can be dragged with the mouse;
 - weight and usage rank on node cards;
 - a local history of Smart-weight changes in a tooltip;
 - the three highest-weight nodes in a group's chain;

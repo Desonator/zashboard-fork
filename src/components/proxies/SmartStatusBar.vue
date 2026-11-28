@@ -11,29 +11,48 @@
         {{ smartNodes.length }}
       </span>
     </div>
-    <div
-      class="smart-status-scroll flex min-w-0 flex-1 flex-nowrap select-none overflow-x-auto overscroll-x-contain max-md:scrollbar-hidden"
-    >
+    <div class="relative min-w-0 flex-1">
       <div
-        v-for="node in smartNodes"
-        :key="`${node.groupName}:${node.name}`"
-        class="border-base-content/15 flex w-max shrink-0 items-center gap-1.5 border-l px-2 py-1 text-xs"
-        @pointerenter="showNodeDetails($event, node)"
+        ref="scrollElement"
+        class="smart-status-scroll flex w-full min-w-0 flex-nowrap select-none overflow-x-auto overscroll-x-contain scrollbar-hidden md:cursor-grab md:active:cursor-grabbing"
+        @scroll.passive="updateScrollFades"
+        @pointerdown="startPointerDrag"
+        @pointermove="movePointerDrag"
+        @pointerup="endPointerDrag"
+        @pointercancel="endPointerDrag"
+        @lostpointercapture="endPointerDrag"
       >
-        <span class="text-base-content/80 shrink-0">{{ shortenName(node.name) }}</span>
-        <span
-          class="shrink-0 rounded px-1 text-[10px] leading-4 tabular-nums"
-          :class="weightAccent(node.rank)"
+        <div
+          v-for="node in smartNodes"
+          :key="`${node.groupName}:${node.name}`"
+          class="border-base-content/15 flex w-max shrink-0 items-center gap-1.5 border-l px-2 py-1 text-xs"
+          @pointerenter="showNodeDetails($event, node)"
         >
-          {{ formatWeight(node.weight) }}
-        </span>
-        <span
-          class="shrink-0 tabular-nums"
-          :class="node.latency > 0 ? getColorForLatency(node.latency) : 'text-base-content/45'"
-        >
-          {{ node.latency > 0 ? `${node.latency} ms` : '—' }}
-        </span>
+          <span class="text-base-content/80 shrink-0">{{ shortenName(node.name) }}</span>
+          <span
+            class="shrink-0 rounded px-1 text-[10px] leading-4 tabular-nums"
+            :class="weightAccent(node.rank)"
+          >
+            {{ formatWeight(node.weight) }}
+          </span>
+          <span
+            class="shrink-0 tabular-nums"
+            :class="node.latency > 0 ? getColorForLatency(node.latency) : 'text-base-content/45'"
+          >
+            {{ node.latency > 0 ? `${node.latency} ms` : '—' }}
+          </span>
+        </div>
       </div>
+      <div
+        v-if="hasScrollLeft"
+        aria-hidden="true"
+        class="smart-status-fade smart-status-fade-left"
+      ></div>
+      <div
+        v-if="hasScrollRight"
+        aria-hidden="true"
+        class="smart-status-fade smart-status-fade-right"
+      ></div>
     </div>
   </div>
 </template>
@@ -43,11 +62,69 @@ import { getLatencyByName, proxyMap, smartWeightsMap } from '@/assembly/proxies'
 import { useTooltip } from '@/composables/use-tooltip'
 import { getColorForLatency } from '@/helper'
 import type { NodeRank } from '@/types'
-import { computed } from 'vue'
+import { useResizeObserver } from '@vueuse/core'
+import { computed, nextTick, onMounted, onUnmounted, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 const { t } = useI18n()
 const { showTip } = useTooltip()
+const scrollElement = ref<HTMLElement | null>(null)
+const hasScrollLeft = ref(false)
+const hasScrollRight = ref(false)
+const isDragging = ref(false)
+let dragStart: { pointerId: number; x: number; scrollLeft: number } | undefined
+
+const updateScrollFades = () => {
+  const element = scrollElement.value
+
+  if (!element) {
+    hasScrollLeft.value = false
+    hasScrollRight.value = false
+    return
+  }
+
+  const maxScrollLeft = element.scrollWidth - element.clientWidth
+  hasScrollLeft.value = element.scrollLeft > 1
+  hasScrollRight.value = maxScrollLeft - element.scrollLeft > 1
+}
+
+const startPointerDrag = (event: PointerEvent) => {
+  if (event.pointerType !== 'mouse' || event.button !== 0) return
+
+  const element = event.currentTarget as HTMLElement
+  if (element.scrollWidth <= element.clientWidth) return
+
+  dragStart = {
+    pointerId: event.pointerId,
+    x: event.clientX,
+    scrollLeft: element.scrollLeft,
+  }
+  element.setPointerCapture(event.pointerId)
+}
+
+const movePointerDrag = (event: PointerEvent) => {
+  if (!dragStart || dragStart.pointerId !== event.pointerId) return
+
+  const delta = event.clientX - dragStart.x
+  if (Math.abs(delta) > 2) {
+    isDragging.value = true
+    event.preventDefault()
+  }
+
+  const element = event.currentTarget as HTMLElement
+  element.scrollLeft = dragStart.scrollLeft - delta
+}
+
+const endPointerDrag = (event: PointerEvent) => {
+  if (dragStart?.pointerId !== event.pointerId) return
+
+  dragStart = undefined
+  isDragging.value = false
+}
+
+onUnmounted(() => {
+  dragStart = undefined
+})
 
 type SmartStatusNode = {
   groupName: string
@@ -72,6 +149,10 @@ const smartNodes = computed(() =>
     .sort((left, right) => right.weight - left.weight),
 )
 
+useResizeObserver(scrollElement, updateScrollFades)
+watch(smartNodes, () => nextTick(updateScrollFades), { flush: 'post' })
+onMounted(() => nextTick(updateScrollFades))
+
 const shortenName = (name: string) => {
   const characters = Array.from(name)
 
@@ -82,7 +163,7 @@ const formatWeight = (weight: number) =>
   Number.isInteger(weight) ? weight.toString() : weight.toFixed(1)
 
 const showNodeDetails = (event: PointerEvent, node: SmartStatusNode) => {
-  if (event.pointerType !== 'mouse') return
+  if (event.pointerType !== 'mouse' || isDragging.value) return
 
   const content = document.createElement('div')
   content.classList.add('flex', 'flex-col', 'gap-1')
@@ -120,5 +201,23 @@ const weightAccent = (rank: string) => {
 <style scoped>
 .smart-status-scroll {
   -webkit-overflow-scrolling: touch;
+}
+
+.smart-status-fade {
+  position: absolute;
+  z-index: 1;
+  inset-block: 0;
+  width: 1.25rem;
+  pointer-events: none;
+}
+
+.smart-status-fade-left {
+  left: 0;
+  background: linear-gradient(to right, var(--color-base-100), transparent);
+}
+
+.smart-status-fade-right {
+  right: 0;
+  background: linear-gradient(to left, var(--color-base-100), transparent);
 }
 </style>
