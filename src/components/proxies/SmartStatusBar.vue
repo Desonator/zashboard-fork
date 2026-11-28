@@ -12,12 +12,12 @@
       </span>
     </div>
     <div
-      class="smart-status-scroll flex min-w-0 flex-1 flex-wrap max-md:flex-nowrap max-md:overflow-x-auto max-md:overscroll-x-contain max-md:scrollbar-hidden max-md:select-none"
+      class="smart-status-scroll flex min-w-0 flex-1 flex-nowrap select-none overflow-x-auto overscroll-x-contain max-md:scrollbar-hidden"
     >
       <div
         v-for="node in smartNodes"
         :key="`${node.groupName}:${node.name}`"
-        class="border-base-content/15 flex max-w-full min-w-0 items-center gap-1.5 border-l px-2 py-1 text-xs max-md:w-max max-md:max-w-none max-md:shrink-0"
+        class="border-base-content/15 flex w-max shrink-0 items-center gap-1.5 border-l px-2 py-1 text-xs"
         @pointerenter="showNodeDetails($event, node)"
       >
         <span class="text-base-content/80 shrink-0">{{ shortenName(node.name) }}</span>
